@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.kyc</groupId>
 	<artifactId>kyc-payments</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>kyc-payments</name>
 	<description>KYC Payments</description>
 
@@ -53,6 +53,12 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
+		<dependency>
+			<groupId>wsdl4j</groupId>
+			<artifactId>wsdl4j</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>

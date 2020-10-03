@@ -1,0 +1,74 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+              targetNamespace="http://kyc-payments.com/PaymentTypes"
+              xmlns:cmn="http://kyc-payments.com/CommonTypes"
+              elementFormDefault="qualified">
+
+    <xs:import schemaLocation="CommonTypes.xsd"
+               namespace="http://kyc-payments.com/CommonTypes"/>
+
+    <xs:element name="MakePaymentRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="payment" type="cmn:PaymentData"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="MakePaymentResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="receipt" type="cmn:ReceiptData"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetInfoPaymentRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="folio" type="xs:integer"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetInfoPaymentResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="receipt" type="cmn:ReceiptData"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetHistoricalPaymentsRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="criteria" type="cmn:HistoricalPaymentCriteria"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetHistoricalPaymentsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="clientNumber" type="xs:integer"/>
+                <xs:element maxOccurs="unbounded" name="payments" type="cmn:ReceiptData"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetStatusPaymentRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="reference" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetStatusPaymentResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="statusPayment" type="cmn:StatusPayment"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
