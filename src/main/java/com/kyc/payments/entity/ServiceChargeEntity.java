@@ -12,7 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import java.util.Date;
 import java.util.List;
 
 @Setter
@@ -25,7 +24,7 @@ public class ServiceChargeEntity {
     @Column(name = "ID")
     private Integer id;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private ServiceEntity service;
 
     @ManyToOne(fetch = FetchType.LAZY)

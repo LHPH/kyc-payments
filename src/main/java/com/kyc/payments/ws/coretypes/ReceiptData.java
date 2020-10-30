@@ -8,6 +8,8 @@
 
 package com.kyc.payments.ws.coretypes;
 
+import com.kyc.payments.util.DateAdapter;
+
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Date;
@@ -17,7 +19,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import org.w3._2001.xmlschema.Adapter1;
 
 
 /**
@@ -56,7 +57,7 @@ public class ReceiptData
     @XmlElement(required = true)
     protected String amount;
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter1 .class)
+    @XmlJavaTypeAdapter(DateAdapter.class)
     @XmlSchemaType(name = "date")
     protected Date datePayment;
 

@@ -3,8 +3,7 @@
               xmlns:cmn="http://kyc-payments.com/CommonTypes"
               elementFormDefault="qualified">
 
-    <xs:import schemaLocation="CommonTypes.xsd"
-               namespace="http://kyc-payments.com/CommonTypes"/>
+    <xs:import schemaLocation="CommonTypes.xsd" namespace="http://kyc-payments.com/CommonTypes"/>
 
     <xs:element name="MakePaymentRequest">
         <xs:complexType>

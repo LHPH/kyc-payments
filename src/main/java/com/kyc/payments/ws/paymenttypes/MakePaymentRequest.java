@@ -40,7 +40,7 @@ import com.kyc.payments.ws.coretypes.PaymentData;
 @XmlType(name = "", propOrder = {
     "payment"
 })
-@XmlRootElement(name = "MakePaymentRequest")
+@XmlRootElement(name = "MakePaymentRequest",namespace = "http://kyc-payments.com/PaymentTypes")
 public class MakePaymentRequest
     implements Serializable
 {

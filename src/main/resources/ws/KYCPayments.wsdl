@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:pym="http://kyc-payments.com/PaymentTypes"
+                  xmlns:tns="http://kyc-payments/KYCPayments.wsdl"
+                  targetNamespace="http://kyc-payments/KYCPayments.wsdl">
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:import namespace="http://kyc-payments.com/PaymentTypes" elementFormDefault="qualified" schemaLocation="PaymentTypes.xsd"/>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="GetStatusPaymentResponse">
+        <wsdl:part element="pym:GetStatusPaymentResponse" name="GetStatusPaymentResponse"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="GetStatusPaymentRequest">
+        <wsdl:part element="pym:GetStatusPaymentRequest" name="GetStatusPaymentRequest"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="GetHistoricalPaymentsRequest">
+        <wsdl:part element="pym:GetHistoricalPaymentsRequest" name="GetHistoricalPaymentsRequest"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="MakePaymentRequest">
+        <wsdl:part element="pym:MakePaymentRequest" name="MakePaymentRequest"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="MakePaymentResponse">
+        <wsdl:part element="pym:MakePaymentResponse" name="MakePaymentResponse"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="GetInfoPaymentRequest">
+        <wsdl:part element="pym:GetInfoPaymentRequest" name="GetInfoPaymentRequest"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="GetInfoPaymentResponse">
+        <wsdl:part element="pym:GetInfoPaymentResponse" name="GetInfoPaymentResponse"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="GetHistoricalPaymentsResponse">
+        <wsdl:part element="pym:GetHistoricalPaymentsResponse" name="GetHistoricalPaymentsResponse"> </wsdl:part>
+    </wsdl:message>
+
+    <wsdl:portType name="Payments">
+        <wsdl:operation name="GetStatusPayment">
+            <wsdl:input message="tns:GetStatusPaymentRequest" name="GetStatusPaymentRequest"> </wsdl:input>
+            <wsdl:output message="tns:GetStatusPaymentResponse" name="GetStatusPaymentResponse"> </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetHistoricalPayments">
+            <wsdl:input message="tns:GetHistoricalPaymentsRequest" name="GetHistoricalPaymentsRequest"> </wsdl:input>
+            <wsdl:output message="tns:GetHistoricalPaymentsResponse" name="GetHistoricalPaymentsResponse"> </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="MakePayment">
+            <wsdl:input message="tns:MakePaymentRequest" name="MakePaymentRequest"> </wsdl:input>
+            <wsdl:output message="tns:MakePaymentResponse" name="MakePaymentResponse"> </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetInfoPayment">
+            <wsdl:input message="tns:GetInfoPaymentRequest" name="GetInfoPaymentRequest"> </wsdl:input>
+            <wsdl:output message="tns:GetInfoPaymentResponse" name="GetInfoPaymentResponse"> </wsdl:output>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="PaymentsSoap11" type="tns:Payments">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="GetStatusPayment">
+            <soap:operation soapAction=""/>
+            <wsdl:input name="GetStatusPaymentRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="GetStatusPaymentResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetHistoricalPayments">
+            <soap:operation soapAction=""/>
+            <wsdl:input name="GetHistoricalPaymentsRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="GetHistoricalPaymentsResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="MakePayment">
+            <soap:operation soapAction=""/>
+            <wsdl:input name="MakePaymentRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="MakePaymentResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetInfoPayment">
+            <soap:operation soapAction=""/>
+            <wsdl:input name="GetInfoPaymentRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="GetInfoPaymentResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="KYCPayments">
+        <wsdl:port binding="tns:PaymentsSoap11" name="PaymentsSoap11">
+            <soap:address location="http://localhost:9000/ws/paymentService/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
