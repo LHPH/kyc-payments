@@ -2,19 +2,21 @@
 // Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
 // Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
-// Generado el: 2020.10.03 a las 01:08:11 PM CDT 
+// Generado el: 2020.10.31 a las 01:07:58 PM CST 
 //
 
 
 package com.kyc.payments.ws.paymenttypes;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import com.kyc.payments.ws.adapters.Adapter2;
 
 
 /**
@@ -45,18 +47,20 @@ public class GetInfoPaymentRequest
     implements Serializable
 {
 
-    @XmlElement(required = true)
-    protected BigInteger folio;
+    @XmlElement(required = true, type = String.class)
+    @XmlJavaTypeAdapter(Adapter2 .class)
+    @XmlSchemaType(name = "integer")
+    protected Integer folio;
 
     /**
      * Obtiene el valor de la propiedad folio.
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public BigInteger getFolio() {
+    public Integer getFolio() {
         return folio;
     }
 
@@ -65,10 +69,10 @@ public class GetInfoPaymentRequest
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public void setFolio(BigInteger value) {
+    public void setFolio(Integer value) {
         this.folio = value;
     }
 

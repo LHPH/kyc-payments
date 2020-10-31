@@ -61,6 +61,14 @@ public class WebServiceConfig {
         return xsd;
     }
 
+    @Bean(name="SecurityTypes")
+    public XsdSchema securityTypes(){
+
+        ClassPathResource securityTypes = new ClassPathResource("ws/SecurityTypes.xsd");
+        SimpleXsdSchema xsd = new SimpleXsdSchema(securityTypes);
+        return xsd;
+    }
+
 
 
 }

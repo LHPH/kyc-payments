@@ -6,15 +6,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class DateAdapter extends XmlAdapter<String, Date> {
+public class DateAdapter {
 
-    @Override
-    public Date unmarshal(String v) throws Exception {
+    public static Date parseDate(String v) {
         return DatatypeConverter.parseDate(v).getTime();
     }
 
-    @Override
-    public String marshal(Date v) throws Exception {
+    public static String printDate(Date v)  {
         Calendar cal = new GregorianCalendar();
         cal.setTime(v);
         return DatatypeConverter.printDate(cal);

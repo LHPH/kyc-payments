@@ -2,14 +2,13 @@
 // Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
 // Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
-// Generado el: 2020.10.03 a las 01:08:11 PM CDT 
+// Generado el: 2020.10.31 a las 01:07:58 PM CST 
 //
 
 
 package com.kyc.payments.ws.coretypes;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Date;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -17,8 +16,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import com.kyc.payments.util.DateAdapter;
+import com.kyc.payments.ws.adapters.Adapter1;
+import com.kyc.payments.ws.adapters.Adapter2;
 
 
 /**
@@ -32,7 +31,7 @@ import com.kyc.payments.util.DateAdapter;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="folio" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="status" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="status" type="{http://kyc-payments.com/CommonTypes}StatusPaymentCategory"/>
  *         &lt;element name="idTransaction" type="{http://www.w3.org/2001/XMLSchema}integer"/>
  *         &lt;element name="startDateTransaction" type="{http://www.w3.org/2001/XMLSchema}date"/>
  *         &lt;element name="finishDateTransaction" type="{http://www.w3.org/2001/XMLSchema}date"/>
@@ -59,15 +58,18 @@ public class StatusPayment
     @XmlElement(required = true)
     protected String folio;
     @XmlElement(required = true)
-    protected String status;
-    @XmlElement(required = true)
-    protected BigInteger idTransaction;
+    @XmlSchemaType(name = "string")
+    protected StatusPaymentEnum status;
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(DateAdapter.class)
+    @XmlJavaTypeAdapter(Adapter2 .class)
+    @XmlSchemaType(name = "integer")
+    protected Integer idTransaction;
+    @XmlElement(required = true, type = String.class)
+    @XmlJavaTypeAdapter(Adapter1 .class)
     @XmlSchemaType(name = "date")
     protected Date startDateTransaction;
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(DateAdapter .class)
+    @XmlJavaTypeAdapter(Adapter1 .class)
     @XmlSchemaType(name = "date")
     protected Date finishDateTransaction;
 
@@ -100,10 +102,10 @@ public class StatusPayment
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link StatusPaymentEnum }
      *     
      */
-    public String getStatus() {
+    public StatusPaymentEnum getStatus() {
         return status;
     }
 
@@ -112,10 +114,10 @@ public class StatusPayment
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link StatusPaymentEnum }
      *     
      */
-    public void setStatus(String value) {
+    public void setStatus(StatusPaymentEnum value) {
         this.status = value;
     }
 
@@ -124,10 +126,10 @@ public class StatusPayment
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public BigInteger getIdTransaction() {
+    public Integer getIdTransaction() {
         return idTransaction;
     }
 
@@ -136,10 +138,10 @@ public class StatusPayment
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public void setIdTransaction(BigInteger value) {
+    public void setIdTransaction(Integer value) {
         this.idTransaction = value;
     }
 

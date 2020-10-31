@@ -60,6 +60,22 @@ public class WebServiceConfigLocal extends WsConfigurerAdapter {
         return xsd;
     }
 
+    @Bean(name="AdapterTypes")
+    public XsdSchema adapterTypes(){
+
+        ClassPathResource adapterTypes = new ClassPathResource("ws/AdapterTypes.xsd");
+        SimpleXsdSchema xsd = new SimpleXsdSchema(adapterTypes);
+        return xsd;
+    }
+
+    @Bean(name="SecurityTypes")
+    public XsdSchema securityTypes(){
+
+        ClassPathResource securityTypes = new ClassPathResource("ws/SecurityTypes.xsd");
+        SimpleXsdSchema xsd = new SimpleXsdSchema(securityTypes);
+        return xsd;
+    }
+
     @Bean
     public XsdSchemaCollection schemasCollection(){
 

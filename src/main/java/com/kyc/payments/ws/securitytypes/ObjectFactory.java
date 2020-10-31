@@ -6,7 +6,7 @@
 //
 
 
-package com.kyc.payments.ws.coretypes;
+package com.kyc.payments.ws.securitytypes;
 
 import javax.xml.bind.annotation.XmlRegistry;
 
@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlRegistry;
 /**
  * This object contains factory methods for each 
  * Java content interface and Java element interface 
- * generated in the com.kyc.payments.ws.coretypes package. 
+ * generated in the com.kyc.payments.ws.securitytypes package. 
  * <p>An ObjectFactory allows you to programatically 
  * construct new instances of the Java representation 
  * for XML content. The Java representation of XML 
@@ -30,50 +30,18 @@ public class ObjectFactory {
 
 
     /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.kyc.payments.ws.coretypes
+     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.kyc.payments.ws.securitytypes
      * 
      */
     public ObjectFactory() {
     }
 
     /**
-     * Create an instance of {@link ReceiptData }
+     * Create an instance of {@link Authentication }
      * 
      */
-    public ReceiptData createReceiptData() {
-        return new ReceiptData();
-    }
-
-    /**
-     * Create an instance of {@link PaymentData }
-     * 
-     */
-    public PaymentData createPaymentData() {
-        return new PaymentData();
-    }
-
-    /**
-     * Create an instance of {@link HistoricalPaymentCriteria }
-     * 
-     */
-    public HistoricalPaymentCriteria createHistoricalPaymentCriteria() {
-        return new HistoricalPaymentCriteria();
-    }
-
-    /**
-     * Create an instance of {@link StatusPayment }
-     * 
-     */
-    public StatusPayment createStatusPayment() {
-        return new StatusPayment();
-    }
-
-    /**
-     * Create an instance of {@link ErrorData }
-     * 
-     */
-    public ErrorData createErrorData() {
-        return new ErrorData();
+    public Authentication createAuthentication() {
+        return new Authentication();
     }
 
 }

@@ -4,6 +4,7 @@
               elementFormDefault="qualified">
 
     <xs:import schemaLocation="CommonTypes.xsd" namespace="http://kyc-payments.com/CommonTypes"/>
+    <xs:import schemaLocation="SecurityTypes.xsd" namespace="http://kyc-payments.com/SecurityTypes"/>
 
     <xs:element name="MakePaymentRequest">
         <xs:complexType>

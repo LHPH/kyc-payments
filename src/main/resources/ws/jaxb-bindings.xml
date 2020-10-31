@@ -10,6 +10,7 @@
         <jaxb:javaType name="java.util.Date" xmlType="xs:date" hasNsContext="false"
                        parseMethod="com.kyc.payments.util.DateAdapter.parseDate"
                        printMethod="com.kyc.payments.util.DateAdapter.printDate" />
+        <jaxb:javaType xmlType="xs:integer" name="java.lang.Integer"/>
     </jaxb:globalBindings>
 
     <jaxb:bindings schemaLocation="CommonTypes.xsd">
@@ -17,11 +18,11 @@
             <jaxb:package name="com.kyc.payments.ws.coretypes" />
         </jaxb:schemaBindings>
 
-        <jaxb:bindings node="//xs:complexType[@name='ErrorWS']">
+        <jaxb:bindings node="//xs:element[@name='ErrorWS']">
             <jaxb:class name="ErrorData" />
         </jaxb:bindings>
 
-        <jaxb:bindings node="//xs:complexType[@name='ErrorWS']//xs:element[@name='code']">
+        <jaxb:bindings node="//xs:element[@name='ErrorWS']//xs:element[@name='code']">
             <jaxb:property name="numberError"/>
         </jaxb:bindings>
 
@@ -38,6 +39,18 @@
     <jaxb:bindings schemaLocation="PaymentTypes.xsd">
         <jaxb:schemaBindings>
             <jaxb:package name="com.kyc.payments.ws.paymenttypes" />
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+
+    <jaxb:bindings schemaLocation="AdapterTypes.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="com.kyc.payments.ws.adapters" />
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+
+    <jaxb:bindings schemaLocation="SecurityTypes.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="com.kyc.payments.ws.securitytypes" />
         </jaxb:schemaBindings>
     </jaxb:bindings>
 

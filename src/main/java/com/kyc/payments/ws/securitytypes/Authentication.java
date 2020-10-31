@@ -6,7 +6,7 @@
 //
 
 
-package com.kyc.payments.ws.paymenttypes;
+package com.kyc.payments.ws.securitytypes;
 
 import java.io.Serializable;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -14,7 +14,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import com.kyc.payments.ws.coretypes.StatusPayment;
 
 
 /**
@@ -27,7 +26,8 @@ import com.kyc.payments.ws.coretypes.StatusPayment;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="statusPayment" type="{http://kyc-payments.com/CommonTypes}StatusPayment"/>
+ *         &lt;element name="user" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="password" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -38,38 +38,65 @@ import com.kyc.payments.ws.coretypes.StatusPayment;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "statusPayment"
+    "user",
+    "password"
 })
-@XmlRootElement(name = "GetStatusPaymentResponse")
-public class GetStatusPaymentResponse
+@XmlRootElement(name = "Authentication")
+public class Authentication
     implements Serializable
 {
 
     @XmlElement(required = true)
-    protected StatusPayment statusPayment;
+    protected String user;
+    @XmlElement(required = true)
+    protected String password;
 
     /**
-     * Obtiene el valor de la propiedad statusPayment.
+     * Obtiene el valor de la propiedad user.
      * 
      * @return
      *     possible object is
-     *     {@link StatusPayment }
+     *     {@link String }
      *     
      */
-    public StatusPayment getStatusPayment() {
-        return statusPayment;
+    public String getUser() {
+        return user;
     }
 
     /**
-     * Define el valor de la propiedad statusPayment.
+     * Define el valor de la propiedad user.
      * 
      * @param value
      *     allowed object is
-     *     {@link StatusPayment }
+     *     {@link String }
      *     
      */
-    public void setStatusPayment(StatusPayment value) {
-        this.statusPayment = value;
+    public void setUser(String value) {
+        this.user = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad password.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * Define el valor de la propiedad password.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setPassword(String value) {
+        this.password = value;
     }
 
 }
