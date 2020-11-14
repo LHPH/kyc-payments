@@ -2,7 +2,9 @@ package com.kyc.payments.endpoints;
 
 import com.kyc.payments.exceptions.KycPaymentsException;
 import com.kyc.payments.services.PaymentService;
+import com.kyc.payments.util.SoapHeaderUtil;
 import com.kyc.payments.ws.coretypes.ErrorData;
+import com.kyc.payments.ws.headertypes.DeviceData;
 import com.kyc.payments.ws.paymenttypes.GetHistoricalPaymentsRequest;
 import com.kyc.payments.ws.paymenttypes.GetHistoricalPaymentsResponse;
 import com.kyc.payments.ws.paymenttypes.GetInfoPaymentRequest;
@@ -23,7 +25,7 @@ import org.springframework.ws.soap.server.endpoint.annotation.SoapHeader;
 
 import java.lang.invoke.MethodHandles;
 
-import static com.kyc.payments.constants.Constants.NAME_SPACE_AUTH_URI;
+import static com.kyc.payments.constants.Constants.NAME_SPACE_HEADER_URI;
 import static com.kyc.payments.constants.Constants.NAME_SPACE_PAYMENTS_URI;
 
 @Endpoint
@@ -31,7 +33,7 @@ public class PaymentServiceEndpoint {
 
     public static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
 
-    public static final String HEADER_AUTH = "{"+NAME_SPACE_AUTH_URI+"}Authentication";
+    public static final String HEADER_DEVICE_TYPES = "{"+NAME_SPACE_HEADER_URI+"}DeviceData";
 
     @Autowired
     private PaymentService paymentService;
@@ -39,9 +41,11 @@ public class PaymentServiceEndpoint {
     @PayloadRoot(localPart = "MakePaymentRequest", namespace = NAME_SPACE_PAYMENTS_URI)
     @ResponsePayload
     public MakePaymentResponse makePayment(@RequestPayload MakePaymentRequest request,
-                                           @SoapHeader(HEADER_AUTH) SoapHeaderElement soapHeader) throws KycPaymentsException {
+                                           @SoapHeader(HEADER_DEVICE_TYPES) SoapHeaderElement soapHeader) throws KycPaymentsException {
 
         LOGGER.info("Consumiendo endpoint de pagos");
+        DeviceData deviceData = SoapHeaderUtil.getHeaderDeviceData(soapHeader);
+        LOGGER.info("Request viene de un dispositivo {}",deviceData.getDevice());
         return paymentService.payService(request);
     }
 

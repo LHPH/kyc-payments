@@ -5,5 +5,5 @@
 // Generado el: 2020.10.31 a las 01:07:58 PM CST 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://kyc-payments.com/SecurityTypes", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
-package com.kyc.payments.ws.securitytypes;
+@javax.xml.bind.annotation.XmlSchema(namespace = "http://kyc-payments.com/HeaderTypes", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+package com.kyc.payments.ws.headertypes;

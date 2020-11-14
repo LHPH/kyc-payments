@@ -6,7 +6,7 @@
 //
 
 
-package com.kyc.payments.ws.securitytypes;
+package com.kyc.payments.ws.headertypes;
 
 import javax.xml.bind.annotation.XmlRegistry;
 
@@ -37,11 +37,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Authentication }
+     * Create an instance of {@link DeviceData }
      * 
      */
-    public Authentication createAuthentication() {
-        return new Authentication();
+    public DeviceData createDeviceData() {
+        return new DeviceData();
     }
 
 }

@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.config.annotation.EnableWs;
 import org.springframework.ws.config.annotation.WsConfigurerAdapter;
+import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
 import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition;
 import org.springframework.xml.xsd.SimpleXsdSchema;
@@ -17,12 +18,12 @@ import org.springframework.xml.xsd.XsdSchema;
 import org.springframework.xml.xsd.XsdSchemaCollection;
 import org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection;
 
+import java.util.List;
 
-import static com.kyc.payments.constants.Constants.NAME_SPACE_PAYMENTS_URI;
 import static com.kyc.payments.constants.Constants.NAME_SPACE_WSDL_PAYMENTS_URI;
 
-@EnableWs
 @Configuration
+@EnableWs
 @Profile("dev")
 public class WebServiceConfigLocal extends WsConfigurerAdapter {
 
@@ -68,11 +69,11 @@ public class WebServiceConfigLocal extends WsConfigurerAdapter {
         return xsd;
     }
 
-    @Bean(name="SecurityTypes")
+    @Bean(name="HeaderTypes")
     public XsdSchema securityTypes(){
 
-        ClassPathResource securityTypes = new ClassPathResource("ws/SecurityTypes.xsd");
-        SimpleXsdSchema xsd = new SimpleXsdSchema(securityTypes);
+        ClassPathResource headerTypes = new ClassPathResource("ws/HeaderTypes.xsd");
+        SimpleXsdSchema xsd = new SimpleXsdSchema(headerTypes);
         return xsd;
     }
 
@@ -87,4 +88,10 @@ public class WebServiceConfigLocal extends WsConfigurerAdapter {
         collection.setUriResolver(new DefaultURIResolver());
         return collection;
     }
+
+    @Override
+    public void addInterceptors(List<EndpointInterceptor> interceptors) {
+        //interceptors.add(securityInterceptor);
+    }
+
 }

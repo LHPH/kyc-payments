@@ -48,9 +48,9 @@
         </jaxb:schemaBindings>
     </jaxb:bindings>
 
-    <jaxb:bindings schemaLocation="SecurityTypes.xsd">
+    <jaxb:bindings schemaLocation="HeaderTypes.xsd">
         <jaxb:schemaBindings>
-            <jaxb:package name="com.kyc.payments.ws.securitytypes" />
+            <jaxb:package name="com.kyc.payments.ws.headertypes" />
         </jaxb:schemaBindings>
     </jaxb:bindings>
 

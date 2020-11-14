@@ -8,18 +8,17 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.ws.config.annotation.EnableWs;
+import org.springframework.ws.config.annotation.WsConfigurerAdapter;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
-import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition;
 import org.springframework.ws.wsdl.wsdl11.SimpleWsdl11Definition;
 import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.springframework.xml.xsd.XsdSchema;
 
-import static com.kyc.payments.constants.Constants.NAME_SPACE_PAYMENTS_URI;
 
-@EnableWs
 @Configuration
+@EnableWs
 @Profile("dev2")
-public class WebServiceConfig {
+public class WebServiceConfig extends WsConfigurerAdapter {
 
     @Value("${service.url}")
     private String urlService;
@@ -61,11 +60,11 @@ public class WebServiceConfig {
         return xsd;
     }
 
-    @Bean(name="SecurityTypes")
+    @Bean(name="HeaderTypes")
     public XsdSchema securityTypes(){
 
-        ClassPathResource securityTypes = new ClassPathResource("ws/SecurityTypes.xsd");
-        SimpleXsdSchema xsd = new SimpleXsdSchema(securityTypes);
+        ClassPathResource headerTypes = new ClassPathResource("ws/HeaderTypes.xsd");
+        SimpleXsdSchema xsd = new SimpleXsdSchema(headerTypes);
         return xsd;
     }
 
