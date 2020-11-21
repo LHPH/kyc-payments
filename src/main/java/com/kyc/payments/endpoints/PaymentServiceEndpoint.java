@@ -3,12 +3,13 @@ package com.kyc.payments.endpoints;
 import com.kyc.payments.exceptions.KycPaymentsException;
 import com.kyc.payments.services.PaymentService;
 import com.kyc.payments.util.SoapHeaderUtil;
-import com.kyc.payments.ws.coretypes.ErrorData;
 import com.kyc.payments.ws.headertypes.DeviceData;
 import com.kyc.payments.ws.paymenttypes.GetHistoricalPaymentsRequest;
 import com.kyc.payments.ws.paymenttypes.GetHistoricalPaymentsResponse;
 import com.kyc.payments.ws.paymenttypes.GetInfoPaymentRequest;
 import com.kyc.payments.ws.paymenttypes.GetInfoPaymentResponse;
+import com.kyc.payments.ws.paymenttypes.GetStatusChargeRequest;
+import com.kyc.payments.ws.paymenttypes.GetStatusChargeResponse;
 import com.kyc.payments.ws.paymenttypes.GetStatusPaymentRequest;
 import com.kyc.payments.ws.paymenttypes.GetStatusPaymentResponse;
 import com.kyc.payments.ws.paymenttypes.MakePaymentRequest;
@@ -51,25 +52,45 @@ public class PaymentServiceEndpoint {
 
     @PayloadRoot(localPart = "GetStatusPaymentRequest",namespace = NAME_SPACE_PAYMENTS_URI)
     @ResponsePayload
-    public GetStatusPaymentResponse getStatusPayment(@RequestPayload GetStatusPaymentRequest request, SoapHeader soapHeader){
+    public GetStatusPaymentResponse getStatusPayment(@RequestPayload GetStatusPaymentRequest request,
+                                                     org.springframework.ws.soap.SoapHeader soapHeader){
 
         LOGGER.info("Consumiendo operacion de status payment");
+        DeviceData deviceData = SoapHeaderUtil.getInfoHeaders(soapHeader);
+        LOGGER.info("Info de Headers {}",deviceData.getDevice());
         return paymentService.getStatusPayment(request);
+    }
+
+    @PayloadRoot(localPart = "GetStatusChargeRequest",namespace = NAME_SPACE_PAYMENTS_URI)
+    @ResponsePayload
+    public GetStatusChargeResponse getStatusCharge(@RequestPayload GetStatusChargeRequest request,
+                                                   @SoapHeader(HEADER_DEVICE_TYPES) SoapHeaderElement soapHeader){
+
+        LOGGER.info("Consumiendo operacion de status charge");
+        DeviceData deviceData = SoapHeaderUtil.getHeaderDeviceData(soapHeader);
+        LOGGER.info("Request viene de un dispositivo {}",deviceData.getDevice());
+        return paymentService.getStatusCharge(request);
     }
 
     @PayloadRoot(localPart = "GetHistoricalPaymentsRequest",namespace = NAME_SPACE_PAYMENTS_URI)
     @ResponsePayload
-    public GetHistoricalPaymentsResponse getHistoricalPayments(@RequestPayload GetHistoricalPaymentsRequest request, SoapHeader soapHeader){
+    public GetHistoricalPaymentsResponse getHistoricalPayments(@RequestPayload GetHistoricalPaymentsRequest request,
+                                                               @SoapHeader(HEADER_DEVICE_TYPES) SoapHeaderElement soapHeader){
 
         LOGGER.info("Consumiendo operacion de obtencion de historico de pagos");
+        DeviceData deviceData = SoapHeaderUtil.getHeaderDeviceData(soapHeader);
+        LOGGER.info("Request viene de un dispositivo {}",deviceData.getDevice());
         return paymentService.getHistoricalPayments(request);
     }
 
     @PayloadRoot(localPart = "GetInfoPaymentRequest",namespace = NAME_SPACE_PAYMENTS_URI)
     @ResponsePayload
-    public GetInfoPaymentResponse getInfoPayment(@RequestPayload GetInfoPaymentRequest request, SoapHeader soapHeader){
+    public GetInfoPaymentResponse getInfoPayment(@RequestPayload GetInfoPaymentRequest request,
+                                                 @SoapHeader(HEADER_DEVICE_TYPES) SoapHeaderElement soapHeader){
 
         LOGGER.info("Consumiendo operacion de info de pago");
+        DeviceData deviceData = SoapHeaderUtil.getHeaderDeviceData(soapHeader);
+        LOGGER.info("Request viene de un dispositivo {}",deviceData.getDevice());
         return paymentService.getInfoPayment(request);
     }
 

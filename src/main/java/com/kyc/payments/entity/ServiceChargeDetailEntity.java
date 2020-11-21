@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -15,14 +16,15 @@ import java.util.Date;
 @Setter
 @Getter
 @Entity
-@Table(name = "SERVICE_CHARGE")
+@Table(name = "SERVICE_CHARGE_DETAIL")
 public class ServiceChargeDetailEntity {
 
     @Id
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @MapsId
+    @JoinColumn(name="ID",referencedColumnName = "ID")
     private ServiceChargeEntity serviceCharge;
 
     @Column(name = "REFERENCE_PAYMENT")

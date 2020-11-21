@@ -2,6 +2,7 @@ package com.kyc.payments.configuration;
 
 import com.kyc.payments.exceptions.DetailSoapFaultDefinitionExceptionResolver;
 import com.kyc.payments.exceptions.KycPaymentExceptionResolver;
+import com.kyc.payments.exceptions.KycUserAuthExceptionResolver;
 import com.kyc.payments.security.KycAuthProvider;
 import com.kyc.payments.services.KycAuthService;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +19,6 @@ import org.springframework.ws.soap.security.xwss.callback.SpringPlainTextPasswor
 import org.springframework.ws.soap.server.endpoint.SoapFaultDefinition;
 import org.springframework.ws.soap.server.endpoint.SoapFaultMappingExceptionResolver;
 
-import javax.xml.bind.JAXBException;
 import java.util.List;
 import java.util.Properties;
 
@@ -44,7 +44,7 @@ public class CommonConfig extends WsConfigurerAdapter{
     }
 
     @Bean
-    public KycPaymentExceptionResolver kycPaymentExceptionResolver() throws JAXBException {
+    public KycPaymentExceptionResolver kycPaymentExceptionResolver() {
 
         KycPaymentExceptionResolver kycPaymentExceptionResolver = new KycPaymentExceptionResolver();
         kycPaymentExceptionResolver.setOrder(1);
@@ -85,6 +85,7 @@ public class CommonConfig extends WsConfigurerAdapter{
         XwsSecurityInterceptor securityInterceptor = new XwsSecurityInterceptor();
         securityInterceptor.setPolicyConfiguration(new ClassPathResource("securityPolicy.xml"));
         securityInterceptor.setCallbackHandler(securityCallbackHandler());
+        securityInterceptor.setExceptionResolver(new KycUserAuthExceptionResolver());
         return securityInterceptor;
     }
 

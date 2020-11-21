@@ -45,6 +45,7 @@ import com.kyc.payments.ws.adapters.Adapter2;
 @XmlType(name = "ReceiptData", propOrder = {
     "folio",
     "amount",
+    "status",
     "datePayment"
 })
 public class ReceiptData
@@ -57,6 +58,8 @@ public class ReceiptData
     protected Integer folio;
     @XmlElement(required = true)
     protected String amount;
+    @XmlElement(required = true)
+    protected String status;
     @XmlElement(required = true, type = String.class)
     @XmlJavaTypeAdapter(Adapter1 .class)
     @XmlSchemaType(name = "date")
@@ -134,4 +137,11 @@ public class ReceiptData
         this.datePayment = value;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

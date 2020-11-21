@@ -22,6 +22,7 @@
         <xs:sequence>
             <xs:element name="folio" type="xs:integer"/>
             <xs:element name="amount" type="xs:string"/>
+            <xs:element name="status" type="xs:string"/>
             <xs:element name="datePayment" type="xs:date"/>
         </xs:sequence>
     </xs:complexType>
@@ -41,6 +42,16 @@
             <xs:element name="idTransaction" type="xs:integer"/>
             <xs:element name="startDateTransaction" type="xs:date"/>
             <xs:element name="finishDateTransaction" type="xs:date"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="StatusCharge">
+        <xs:sequence>
+            <xs:element name="reference" type="xs:string" />
+            <xs:element name="status" type="xs:string" />
+            <xs:element name="amount" type="xs:string" />
+            <xs:element name="dateCharge" type="xs:date" />
+            <xs:element name="payments" type="cm:StatusPayment" maxOccurs="unbounded" />
         </xs:sequence>
     </xs:complexType>
 

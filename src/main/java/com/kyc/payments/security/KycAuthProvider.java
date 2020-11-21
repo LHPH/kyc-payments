@@ -1,5 +1,6 @@
 package com.kyc.payments.security;
 
+import com.kyc.payments.entity.KycUser;
 import com.kyc.payments.services.KycAuthService;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,10 +8,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.lang.invoke.MethodHandles;
@@ -31,16 +33,28 @@ public class KycAuthProvider implements AuthenticationProvider {
         String username = authentication.getName();
         String pass = authentication.getCredentials().toString();
 
-        String passEncoded = passwordEncoder.encode(pass);
-        //$2a$10$KJsjXh68CUFNTLDpwEQzheL.RQIlF04QuWqonECSnTUyQmrNY8wn.
-        LOGGER.info("The pass encoded is {}",passEncoded);
+        KycUser user = kycAuthService.retrieveCustomerByUser(username);
 
-        User user = kycAuthService.retrieveCustomerByUser(username);
-        boolean ind = passwordEncoder.matches(pass,user.getPassword());
+        if(user!=null){
 
-        if(ind){
-            return new UsernamePasswordAuthenticationToken(username,pass,new ArrayList<>());
+            if(user.isActive() && !user.isLocked()){
+
+                boolean ind = passwordEncoder.matches(pass,user.getSecret());
+                if(ind){
+                    LOGGER.info("El usuario {} se autentico correctamente",username);
+                    return new UsernamePasswordAuthenticationToken(username,pass,new ArrayList<>());
+                }
+            }
+            else if(!user.isActive()){
+                LOGGER.warn("El usuario {} no esta activo",username);
+                throw new DisabledException("Authentication failed for " + username);
+            }
+            else{
+                LOGGER.warn("El usuario {} esta bloqueado",username);
+                throw new LockedException("Authentication failed for " + username);
+            }
         }
+        LOGGER.warn("El usuario {} no se autentico correctamente",username);
         throw new BadCredentialsException("Authentication failed for " + username);
 
     }

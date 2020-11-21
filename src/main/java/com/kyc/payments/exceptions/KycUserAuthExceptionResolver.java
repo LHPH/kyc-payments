@@ -18,23 +18,23 @@ import javax.xml.transform.Result;
 import java.lang.invoke.MethodHandles;
 import java.util.Locale;
 
-import static com.kyc.payments.constants.Constants.ERROR_CODE_01;
-import static com.kyc.payments.constants.Constants.ERROR_DESC_01;
+import static com.kyc.payments.constants.Constants.ERROR_CODE_02;
+import static com.kyc.payments.constants.Constants.ERROR_DESC_02;
 
-public class KycPaymentExceptionResolver extends AbstractEndpointExceptionResolver {
+public class KycUserAuthExceptionResolver extends AbstractEndpointExceptionResolver {
 
     public static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private final Marshaller marshaller;
     private ObjectFactory objectFactory = new ObjectFactory();
 
-    public KycPaymentExceptionResolver()  {
+    public KycUserAuthExceptionResolver()  {
 
         try{
             JAXBContext jaxbContext = JAXBContext.newInstance(ErrorData.class);
             marshaller = jaxbContext.createMarshaller();
         }
         catch(JAXBException e){
-            LOGGER.info("No se pudo cargar el marshaller {}",e);
+            LOGGER.info("No se pudo cargar el marshaller",e);
             throw new RuntimeException(e);
         }
     }
@@ -42,12 +42,16 @@ public class KycPaymentExceptionResolver extends AbstractEndpointExceptionResolv
     @Override
     protected boolean resolveExceptionInternal(MessageContext messageContext, Object o, Exception e) {
 
-        ErrorData errorData = getErrorData(e);
+        LOGGER.error("No se pudo autenticar al usuario ",e);
+
+        ErrorData errorData = new ErrorData();
+        errorData.setNumberError(ERROR_CODE_02);
+        errorData.setDescription(ERROR_DESC_02);
 
         SoapMessage soapMessage = (SoapMessage) messageContext.getResponse();
         SoapBody soapBody = soapMessage.getSoapBody();
 
-        SoapFault soapFault = soapBody.addClientOrSenderFault("Error", Locale.ENGLISH);
+        SoapFault soapFault = soapBody.addClientOrSenderFault("Error de Autenticacion", Locale.ENGLISH);
 
         SoapFaultDetail detail = soapFault.addFaultDetail();
         Result result = detail.getResult();
@@ -60,24 +64,5 @@ public class KycPaymentExceptionResolver extends AbstractEndpointExceptionResolv
             LOGGER.error("No se pudo hacer la conversion ",jaxbex);
         }
         return false;
-    }
-
-    private ErrorData getErrorData(Exception e){
-
-        String code = ERROR_CODE_01;
-        String desc = ERROR_DESC_01;
-
-        LOGGER.error("Ocurrio un error interno ",e);
-
-        if(e instanceof KycPaymentsException){
-
-            KycPaymentsException kycExc = (KycPaymentsException)e;
-            return kycExc.getErrorData();
-        }
-
-        ErrorData errorData = new ErrorData();
-        errorData.setNumberError(code);
-        errorData.setDescription(desc);
-        return errorData;
     }
 }

@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -22,18 +23,20 @@ public class ServiceChargeEntity {
 
     @Id
     @Column(name = "ID")
-    private Integer id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_SERVICE",referencedColumnName = "ID")
     private ServiceEntity service;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_CUSTOMER",referencedColumnName = "ID")
     private CustomerEntity customer;
 
     @OneToOne(mappedBy = "serviceCharge",cascade = CascadeType.ALL,fetch = FetchType.LAZY,optional = false)
     private ServiceChargeDetailEntity serviceChargeDetail;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "serviceCharge",orphanRemoval = true,cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "serviceCharge",orphanRemoval = true,cascade = CascadeType.ALL)
     private List<PaymentEntity> payments;
 
 }

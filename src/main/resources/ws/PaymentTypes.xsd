@@ -58,7 +58,7 @@
     <xs:element name="GetStatusPaymentRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="reference" type="xs:string"/>
+                <xs:element name="folio" type="xs:integer"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -70,5 +70,23 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+
+    <xs:element name="GetStatusChargeRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="reference" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetStatusChargeResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="statusCharge" type="cmn:StatusCharge"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
 
 </xs:schema>

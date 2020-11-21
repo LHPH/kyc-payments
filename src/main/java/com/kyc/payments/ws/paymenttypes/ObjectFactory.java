@@ -77,11 +77,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link GetStatusPaymentRequest }
+     * Create an instance of {@link GetStatusChargeRequest }
      * 
      */
-    public GetStatusPaymentRequest createGetStatusPaymentRequest() {
-        return new GetStatusPaymentRequest();
+    public GetStatusChargeRequest createGetStatusPaymentRequest() {
+        return new GetStatusChargeRequest();
     }
 
     /**
