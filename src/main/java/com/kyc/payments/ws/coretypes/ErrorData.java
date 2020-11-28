@@ -53,6 +53,15 @@ public class ErrorData
     @XmlElement(required = true)
     protected String description;
 
+    public ErrorData(){
+
+    }
+
+    public ErrorData(String code, String desc){
+        this.numberError = code;
+        this.description = desc;
+    }
+
     /**
      * Obtiene el valor de la propiedad numberError.
      * 

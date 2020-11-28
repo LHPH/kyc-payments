@@ -52,10 +52,7 @@ import com.kyc.payments.ws.adapters.Adapter2;
     "source",
     "amount",
     "motive",
-    "idService",
-    "idBank",
-    "destination",
-    "datePayment"
+    "idBank"
 })
 public class PaymentData
     implements Serializable
@@ -69,18 +66,8 @@ public class PaymentData
     protected String amount;
     @XmlElement(required = true)
     protected String motive;
-    @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter2 .class)
-    @XmlSchemaType(name = "integer")
-    protected Integer idService;
     @XmlElement(required = true)
     protected String idBank;
-    @XmlElement(required = true)
-    protected String destination;
-    @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter1 .class)
-    @XmlSchemaType(name = "date")
-    protected Date datePayment;
 
     /**
      * Obtiene el valor de la propiedad reference.
@@ -186,30 +173,7 @@ public class PaymentData
      *     {@link String }
      *     
      */
-    public Integer getIdService() {
-        return idService;
-    }
 
-    /**
-     * Define el valor de la propiedad idService.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setIdService(Integer value) {
-        this.idService = value;
-    }
-
-    /**
-     * Obtiene el valor de la propiedad idBank.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
     public String getIdBank() {
         return idBank;
     }
@@ -234,44 +198,4 @@ public class PaymentData
      *     {@link String }
      *     
      */
-    public String getDestination() {
-        return destination;
-    }
-
-    /**
-     * Define el valor de la propiedad destination.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setDestination(String value) {
-        this.destination = value;
-    }
-
-    /**
-     * Obtiene el valor de la propiedad datePayment.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public Date getDatePayment() {
-        return datePayment;
-    }
-
-    /**
-     * Define el valor de la propiedad datePayment.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setDatePayment(Date value) {
-        this.datePayment = value;
-    }
-
 }

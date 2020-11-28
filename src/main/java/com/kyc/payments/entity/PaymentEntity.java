@@ -23,7 +23,7 @@ public class PaymentEntity {
 
     @Id
     @Column(name = "FOLIO")
-    private Integer folio;
+    private Long folio;
 
     @Column(name = "PAYMENT_SOURCE")
     private String paymentSource;

@@ -22,7 +22,7 @@ public class ServiceChargeDetailEntity {
     @Id
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name="ID",referencedColumnName = "ID")
     private ServiceChargeEntity serviceCharge;

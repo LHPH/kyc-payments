@@ -7,6 +7,8 @@ import org.springframework.security.core.GrantedAuthority;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.Date;
 import java.util.Set;
@@ -33,6 +35,9 @@ public class KycUser {
     private Date dateCreation;
     @Column(name="DATE_UPDATED")
     private Date dateUpdated;
+    @OneToOne
+    @JoinColumn(name = "ID_PERSON",referencedColumnName = "ID")
+    private CustomerEntity customer;
 
     @Override
     public String toString() {

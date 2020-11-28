@@ -42,7 +42,7 @@ public class KycAuthProvider implements AuthenticationProvider {
                 boolean ind = passwordEncoder.matches(pass,user.getSecret());
                 if(ind){
                     LOGGER.info("El usuario {} se autentico correctamente",username);
-                    return new UsernamePasswordAuthenticationToken(username,pass,new ArrayList<>());
+                    return new UsernamePasswordAuthenticationToken(user.getCustomer(),pass,new ArrayList<>());
                 }
             }
             else if(!user.isActive()){

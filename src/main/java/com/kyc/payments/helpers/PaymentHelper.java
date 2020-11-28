@@ -64,7 +64,6 @@ public class PaymentHelper {
     public GetInfoPaymentResponse getInfoPayment(PaymentEntity payment){
 
         GetInfoPaymentResponse response =  new GetInfoPaymentResponse();
-
         List<TransactionsEntity> transactions = payment.getTransactions();
         Optional<TransactionsEntity> op = transactions.stream().findFirst();
         TransactionsEntity latest = op.orElse(new TransactionsEntity());
@@ -75,9 +74,9 @@ public class PaymentHelper {
         receiptData.setStatus(latestStatus.getDescription());
         receiptData.setDatePayment(latest.getDateFinish());
         receiptData.setAmount(payment.getAmount());
-        receiptData.setFolio(payment.getFolio());
-
+        receiptData.setFolio(payment.getFolio().intValue());
         response.setReceipt(receiptData);
+
         return response;
 
     }

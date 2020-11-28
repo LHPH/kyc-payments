@@ -7,6 +7,7 @@ import com.kyc.payments.ws.coretypes.StatusPaymentEnum;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class PaymentUtils {
 
@@ -22,6 +23,18 @@ public class PaymentUtils {
     public static StatusPaymentEnum getStatusPayment(PaymentStatusEntity status){
 
        return enumStatus.get(status.getId());
+    }
+
+    public static Integer getIdStatusPayment(StatusPaymentEnum status){
+
+        Integer id = null;
+        for(Map.Entry<Integer,StatusPaymentEnum> entry: enumStatus.entrySet()){
+            if(entry.getValue().equals(status)){
+                id = entry.getKey();
+                break;
+            }
+        }
+        return id;
     }
 
 }

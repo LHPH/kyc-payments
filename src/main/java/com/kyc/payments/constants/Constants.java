@@ -16,8 +16,13 @@ public interface Constants {
     String ERROR_DESC_03 = "No se pudo efectuar el pago.";
 
     String ERROR_CODE_04 ="E04";
-    String ERROR_DESC_04 = "No se pudo realizar la busqueda deseada.";
+    String ERROR_DESC_04 = "No existe informacion del cargo con la referencia ingresada.";
 
+    String ERROR_CODE_05 ="E05";
+    String ERROR_DESC_05 = "No existe informacion del estatus del pago ingresado.";
+
+    String ERROR_CODE_06 ="E06";
+    String ERROR_DESC_06 = "No existe informacion del pago ingresado.";
 
 
 }

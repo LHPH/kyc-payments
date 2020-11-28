@@ -53,7 +53,8 @@ public class PaymentServiceEndpoint {
     @PayloadRoot(localPart = "GetStatusPaymentRequest",namespace = NAME_SPACE_PAYMENTS_URI)
     @ResponsePayload
     public GetStatusPaymentResponse getStatusPayment(@RequestPayload GetStatusPaymentRequest request,
-                                                     org.springframework.ws.soap.SoapHeader soapHeader){
+                                                     org.springframework.ws.soap.SoapHeader soapHeader)
+                                                    throws KycPaymentsException{
 
         LOGGER.info("Consumiendo operacion de status payment");
         DeviceData deviceData = SoapHeaderUtil.getInfoHeaders(soapHeader);
@@ -64,7 +65,8 @@ public class PaymentServiceEndpoint {
     @PayloadRoot(localPart = "GetStatusChargeRequest",namespace = NAME_SPACE_PAYMENTS_URI)
     @ResponsePayload
     public GetStatusChargeResponse getStatusCharge(@RequestPayload GetStatusChargeRequest request,
-                                                   @SoapHeader(HEADER_DEVICE_TYPES) SoapHeaderElement soapHeader){
+                                                   @SoapHeader(HEADER_DEVICE_TYPES) SoapHeaderElement soapHeader)
+                                                    throws KycPaymentsException{
 
         LOGGER.info("Consumiendo operacion de status charge");
         DeviceData deviceData = SoapHeaderUtil.getHeaderDeviceData(soapHeader);
@@ -75,7 +77,8 @@ public class PaymentServiceEndpoint {
     @PayloadRoot(localPart = "GetHistoricalPaymentsRequest",namespace = NAME_SPACE_PAYMENTS_URI)
     @ResponsePayload
     public GetHistoricalPaymentsResponse getHistoricalPayments(@RequestPayload GetHistoricalPaymentsRequest request,
-                                                               @SoapHeader(HEADER_DEVICE_TYPES) SoapHeaderElement soapHeader){
+                                                               @SoapHeader(HEADER_DEVICE_TYPES) SoapHeaderElement soapHeader)
+                                                                throws KycPaymentsException{
 
         LOGGER.info("Consumiendo operacion de obtencion de historico de pagos");
         DeviceData deviceData = SoapHeaderUtil.getHeaderDeviceData(soapHeader);
@@ -86,7 +89,8 @@ public class PaymentServiceEndpoint {
     @PayloadRoot(localPart = "GetInfoPaymentRequest",namespace = NAME_SPACE_PAYMENTS_URI)
     @ResponsePayload
     public GetInfoPaymentResponse getInfoPayment(@RequestPayload GetInfoPaymentRequest request,
-                                                 @SoapHeader(HEADER_DEVICE_TYPES) SoapHeaderElement soapHeader){
+                                                 @SoapHeader(HEADER_DEVICE_TYPES) SoapHeaderElement soapHeader)
+                                                    throws KycPaymentsException{
 
         LOGGER.info("Consumiendo operacion de info de pago");
         DeviceData deviceData = SoapHeaderUtil.getHeaderDeviceData(soapHeader);

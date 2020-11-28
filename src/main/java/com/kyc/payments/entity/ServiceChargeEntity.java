@@ -36,7 +36,7 @@ public class ServiceChargeEntity {
     @OneToOne(mappedBy = "serviceCharge",cascade = CascadeType.ALL,fetch = FetchType.LAZY,optional = false)
     private ServiceChargeDetailEntity serviceChargeDetail;
 
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "serviceCharge",orphanRemoval = true,cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "serviceCharge",orphanRemoval = true,cascade = CascadeType.ALL)
     private List<PaymentEntity> payments;
 
 }
