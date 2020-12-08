@@ -13,7 +13,7 @@ public interface Constants {
     String ERROR_DESC_02 = "No se pudo autenticar al usuario.";
 
     String ERROR_CODE_03 ="E03";
-    String ERROR_DESC_03 = "No se pudo efectuar el pago.";
+    String ERROR_DESC_03 = "El cargo ya ha sido pagado.";
 
     String ERROR_CODE_04 ="E04";
     String ERROR_DESC_04 = "No existe informacion del cargo con la referencia ingresada.";
@@ -24,5 +24,10 @@ public interface Constants {
     String ERROR_CODE_06 ="E06";
     String ERROR_DESC_06 = "No existe informacion del pago ingresado.";
 
+    String ERROR_CODE_07 = "E07";
+    String ERROR_DESC_07 = "La entidad bancaria ingresada no existe o no esta autorizada.";
+
+    String ERROR_CODE_08 = "E08";
+    String ERROR_DESC_08 = "No se pudo efectuar el pago.";
 
 }

@@ -33,6 +33,7 @@ import com.kyc.payments.ws.paymenttypes.MakePaymentResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -45,12 +46,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.kyc.payments.constants.Constants.ERROR_CODE_03;
 import static com.kyc.payments.constants.Constants.ERROR_CODE_04;
 import static com.kyc.payments.constants.Constants.ERROR_CODE_05;
 import static com.kyc.payments.constants.Constants.ERROR_CODE_06;
+import static com.kyc.payments.constants.Constants.ERROR_CODE_07;
+import static com.kyc.payments.constants.Constants.ERROR_CODE_08;
+import static com.kyc.payments.constants.Constants.ERROR_DESC_03;
 import static com.kyc.payments.constants.Constants.ERROR_DESC_04;
 import static com.kyc.payments.constants.Constants.ERROR_DESC_05;
 import static com.kyc.payments.constants.Constants.ERROR_DESC_06;
+import static com.kyc.payments.constants.Constants.ERROR_DESC_07;
+import static com.kyc.payments.constants.Constants.ERROR_DESC_08;
 
 @Service
 public class PaymentService {
@@ -77,61 +84,47 @@ public class PaymentService {
         LOGGER.info("Buscando si existe la referencia del cargo");
         ServiceChargeDetailEntity chargeDetail = serviceChargeDetailRepository.findByReference(reference);
         if(chargeDetail==null){
-
+            throw new KycPaymentsException(new ErrorData(ERROR_CODE_04,ERROR_DESC_04));
         }
         LOGGER.info("Verificando si el cargo ya esta pagado");
         Boolean isPaid = chargeDetail.getPaid() != null && chargeDetail.getPaid();
         if(isPaid){
-
+            throw new KycPaymentsException(new ErrorData(ERROR_CODE_03,ERROR_DESC_03));
         }
-        LOGGER.info("Procesando datos para el pago");
-        PaymentStatusEntity paymentStatus = new PaymentStatusEntity();
-        paymentStatus.setId(PaymentUtils.getIdStatusPayment(StatusPaymentEnum.PAYMENT_ONGOING));
-
-        PaymentEntity payment = new PaymentEntity();
-        payment.setAmount(paymentData.getAmount());
-        payment.setMotive(paymentData.getMotive());
-        payment.setPaymentSource(paymentData.getSource());
-        payment.setServiceCharge(chargeDetail.getServiceCharge());
-        payment.setPaymentStatus(paymentStatus);
-
         LOGGER.info("Verificando si el banco es autorizado");
         BankEntity bank = bankRepository.findByCveBank(paymentData.getIdBank());
         if(bank == null){
-
+            throw new KycPaymentsException(new ErrorData(ERROR_CODE_07,ERROR_DESC_07));
         }
 
-        LOGGER.info("Preparando datos para la transaccion");
-        TransactionStatusEntity transactionStatus = new TransactionStatusEntity();
-        transactionStatus.setId(TransactionStatusEnum.SEND.getIdStatusTransaction());
+        try{
+            LOGGER.info("Procesando datos para el pago");
+            PaymentEntity payment = paymentHelper.preparePayment(paymentData);
+            payment.setServiceCharge(chargeDetail.getServiceCharge());
 
-        TransactionsEntity transaction = new TransactionsEntity();
-        transaction.setBank(bank);
-        transaction.setDateStart(new Timestamp(new Date().getTime()));
-        transaction.setSource("KYC");
-        transaction.setTransactionStatus(transactionStatus);
-        transaction.setDestination(bank.getCveBank());
-        transaction.setPayment(payment);
+            LOGGER.info("Preparando datos para la transaccion");
+            TransactionsEntity transaction = paymentHelper.prepareTransaction(bank);
 
-        if(payment.getTransactions() == null){
-            payment.setTransactions(new ArrayList<>());
+            transaction.setPayment(payment);
+            if(payment.getTransactions() == null){
+                payment.setTransactions(new ArrayList<>());
+            }
+            payment.getTransactions().add(transaction);
+
+            LOGGER.info("Guardando informacion del pago");
+            PaymentEntity result = paymentRepository.save(payment);
+            Long folio = result.getFolio();
+            LOGGER.info("Se ha registrado el pago cuya referencia {} esta asociada al folio {}",reference,folio);
+
+            ReceiptData receiptData =  paymentHelper.getInfoPayment(result).getReceipt();
+            MakePaymentResponse response = new MakePaymentResponse();
+            response.setReceipt(receiptData);
+            return response;
         }
-        payment.getTransactions().add(transaction);
-
-        LOGGER.info("Guardando informacion del pago");
-      //  PaymentEntity result = paymentRepository.save(payment);
-        //Long folio = result.getFolio();
-        Long folio = 100L;
-        LOGGER.info("Se ha registrado el pago cuya referencia {} esta asociada al folio {}",reference,folio);
-
-        MakePaymentResponse response = new MakePaymentResponse();
-        response.setReceipt(new ReceiptData());
-        response.getReceipt().setAmount(req.getPayment().getAmount());
-        response.getReceipt().setDatePayment(new Date());
-        response.getReceipt().setFolio(folio.intValue());
-
-        return response;
-
+        catch(DataAccessException dex){
+            LOGGER.error(" ",dex);
+            throw new KycPaymentsException(new ErrorData(ERROR_CODE_08,ERROR_DESC_08));
+        }
     }
 
     public GetStatusPaymentResponse getStatusPayment(GetStatusPaymentRequest request) throws KycPaymentsException {

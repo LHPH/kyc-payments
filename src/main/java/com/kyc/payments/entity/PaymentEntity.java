@@ -7,6 +7,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -22,6 +24,7 @@ import java.util.List;
 public class PaymentEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "FOLIO")
     private Long folio;
 
@@ -34,11 +37,11 @@ public class PaymentEntity {
     @Column(name = "MOTIVE")
     private String motive;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_SERVICE_CHARGE",referencedColumnName = "ID")
     private ServiceChargeEntity serviceCharge;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_STATUS_PAYMENT",referencedColumnName = "ID")
     private PaymentStatusEntity paymentStatus;
 
