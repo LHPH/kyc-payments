@@ -75,7 +75,7 @@ public class StatusCharge
     public List<StatusPayment> getPayments() {
 
         if(payments==null){
-            return new ArrayList<>();
+            payments = new ArrayList<>();
         }
         return payments;
     }

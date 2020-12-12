@@ -5,6 +5,7 @@ import com.kyc.payments.entity.CustomerEntity;
 import com.kyc.payments.entity.PaymentEntity;
 import com.kyc.payments.entity.PaymentStatusEntity;
 import com.kyc.payments.entity.ServiceChargeDetailEntity;
+import com.kyc.payments.entity.ServiceChargeEntity;
 import com.kyc.payments.entity.TransactionStatusEntity;
 import com.kyc.payments.entity.TransactionsEntity;
 import com.kyc.payments.enums.TransactionStatusEnum;
@@ -13,8 +14,10 @@ import com.kyc.payments.helpers.PaymentHelper;
 import com.kyc.payments.repositories.BankRepository;
 import com.kyc.payments.repositories.PaymentRepository;
 import com.kyc.payments.repositories.ServiceChargeDetailRepository;
+import com.kyc.payments.repositories.ServiceChargeRepository;
 import com.kyc.payments.util.PaymentUtils;
 import com.kyc.payments.ws.coretypes.ErrorData;
+import com.kyc.payments.ws.coretypes.HistoricalPaymentCriteria;
 import com.kyc.payments.ws.coretypes.PaymentData;
 import com.kyc.payments.ws.coretypes.ReceiptData;
 import com.kyc.payments.ws.coretypes.StatusCharge;
@@ -32,6 +35,7 @@ import com.kyc.payments.ws.paymenttypes.MakePaymentRequest;
 import com.kyc.payments.ws.paymenttypes.MakePaymentResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bouncycastle.util.Times;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.Authentication;
@@ -45,6 +49,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.kyc.payments.constants.Constants.ERROR_CODE_03;
 import static com.kyc.payments.constants.Constants.ERROR_CODE_04;
@@ -58,6 +63,7 @@ import static com.kyc.payments.constants.Constants.ERROR_DESC_05;
 import static com.kyc.payments.constants.Constants.ERROR_DESC_06;
 import static com.kyc.payments.constants.Constants.ERROR_DESC_07;
 import static com.kyc.payments.constants.Constants.ERROR_DESC_08;
+import static com.kyc.payments.util.PaymentUtils.getTimestamp;
 
 @Service
 public class PaymentService {
@@ -66,6 +72,9 @@ public class PaymentService {
 
     @Autowired
     private PaymentHelper paymentHelper;
+
+    @Autowired
+    private ServiceChargeRepository serviceChargeRepository;
 
     @Autowired
     private ServiceChargeDetailRepository serviceChargeDetailRepository;
@@ -77,6 +86,7 @@ public class PaymentService {
     private BankRepository bankRepository;
 
 
+    @Transactional
     public MakePaymentResponse payService(MakePaymentRequest req)  throws KycPaymentsException{
 
         PaymentData paymentData = req.getPayment();
@@ -162,12 +172,16 @@ public class PaymentService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomerEntity customer = (CustomerEntity) auth.getPrincipal();
 
-        GetHistoricalPaymentsResponse response = new GetHistoricalPaymentsResponse();
-        response.setClientNumber(11323);
-        response.getPayments().add(new ReceiptData());
-        response.getPayments().get(0).setFolio(121);
-        response.getPayments().get(0).setAmount("323234");
-        response.getPayments().get(0).setDatePayment(new Date());
+        HistoricalPaymentCriteria criteria = request.getCriteria();
+        Integer id = customer.getId();
+        Date dateStart = criteria.getStartDate();
+        Date dateFinish = criteria.getFinishDate();
+        Integer numRows = criteria.getNumRecords() == null || criteria.getNumRecords()==0 ? 10 : criteria.getNumRecords();
+
+        List<PaymentEntity> payments = paymentRepository.getPaymentsFromDateAndCustomer(dateStart,dateFinish,id);
+        List<PaymentEntity> result = payments.stream().limit(numRows).collect(Collectors.toList());
+        GetHistoricalPaymentsResponse response = paymentHelper.getHistoricalPayments(result);
+        response.setClientNumber(id);
 
         return response;
     }

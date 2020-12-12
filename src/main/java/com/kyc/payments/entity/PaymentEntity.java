@@ -2,6 +2,7 @@ package com.kyc.payments.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,6 +16,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import java.util.Date;
 import java.util.List;
 
 @Setter
@@ -47,5 +51,9 @@ public class PaymentEntity {
 
     @OneToMany(fetch = FetchType.LAZY,orphanRemoval = true,mappedBy = "payment",cascade = CascadeType.ALL)
     private List<TransactionsEntity> transactions;
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "DATE_PAYMENT")
+    private Date datePayment;
 
 }

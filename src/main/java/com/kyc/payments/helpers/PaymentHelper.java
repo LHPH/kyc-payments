@@ -13,12 +13,14 @@ import com.kyc.payments.ws.coretypes.ReceiptData;
 import com.kyc.payments.ws.coretypes.StatusCharge;
 import com.kyc.payments.ws.coretypes.StatusPayment;
 import com.kyc.payments.ws.coretypes.StatusPaymentEnum;
+import com.kyc.payments.ws.paymenttypes.GetHistoricalPaymentsResponse;
 import com.kyc.payments.ws.paymenttypes.GetInfoPaymentResponse;
 import com.kyc.payments.ws.paymenttypes.GetStatusChargeResponse;
 import com.kyc.payments.ws.paymenttypes.GetStatusPaymentResponse;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -33,13 +35,17 @@ public class PaymentHelper {
         StatusPayment status = new StatusPayment();
 
         status.setFolio(String.valueOf(payment.getFolio()));
+        status.setAmount(payment.getAmount());
 
         List<TransactionsEntity> transactions = payment.getTransactions();
         TransactionsEntity latest = transactions.get(0);
+        TransactionStatusEntity latestStatus = Optional.ofNullable(latest.getTransactionStatus())
+                .orElse(new TransactionStatusEntity());
 
         status.setIdTransaction(latest.getId());
         status.setFinishDateTransaction(latest.getDateFinish());
         status.setStartDateTransaction(latest.getDateStart());
+        status.setStatusTransaction(latestStatus.getDescription());
 
         status.setStatus(PaymentUtils.getStatusPayment(payment.getPaymentStatus()));
 
@@ -70,16 +76,14 @@ public class PaymentHelper {
     public GetInfoPaymentResponse getInfoPayment(PaymentEntity payment){
 
         GetInfoPaymentResponse response =  new GetInfoPaymentResponse();
-        List<TransactionsEntity> transactions = payment.getTransactions();
-        Optional<TransactionsEntity> op = transactions.stream().findFirst();
-        TransactionsEntity latest = op.orElse(new TransactionsEntity());
-        TransactionStatusEntity latestStatus = Optional.ofNullable(latest.getTransactionStatus())
-                .orElse(new TransactionStatusEntity());
+        //List<TransactionsEntity> transactions = payment.getTransactions();
+        //Optional<TransactionsEntity> op = transactions.stream().findFirst();
 
         ReceiptData receiptData = new ReceiptData();
-        receiptData.setStatus(latestStatus.getDescription());
-        receiptData.setDatePayment(latest.getDateStart());
+        receiptData.setStatus(PaymentUtils.getStatusPayment(payment.getPaymentStatus()).value());
+        receiptData.setDatePayment(payment.getDatePayment());
         receiptData.setAmount(payment.getAmount());
+        receiptData.setMotive(payment.getMotive());
         receiptData.setFolio(payment.getFolio().intValue());
         response.setReceipt(receiptData);
 
@@ -95,6 +99,7 @@ public class PaymentHelper {
         PaymentEntity payment = new PaymentEntity();
         payment.setAmount(paymentData.getAmount());
         payment.setMotive(paymentData.getMotive());
+        payment.setDatePayment(new Date());
         payment.setPaymentSource(paymentData.getSource());
         payment.setPaymentStatus(paymentStatus);
 
@@ -117,6 +122,13 @@ public class PaymentHelper {
 
     }
 
+    public GetHistoricalPaymentsResponse getHistoricalPayments(List<PaymentEntity> payments){
 
+        GetHistoricalPaymentsResponse response = new GetHistoricalPaymentsResponse();
+        for(PaymentEntity payment: payments){
+            response.getPayments().add(getInfoPayment(payment).getReceipt());
+        }
+        return response;
+    }
 
 }

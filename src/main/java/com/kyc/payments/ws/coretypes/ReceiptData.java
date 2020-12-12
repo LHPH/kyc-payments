@@ -46,6 +46,7 @@ import com.kyc.payments.ws.adapters.Adapter2;
     "folio",
     "amount",
     "status",
+    "motive",
     "datePayment"
 })
 public class ReceiptData
@@ -60,6 +61,8 @@ public class ReceiptData
     protected String amount;
     @XmlElement(required = true)
     protected String status;
+    @XmlElement(required = true)
+    protected String motive;
     @XmlElement(required = true, type = String.class)
     @XmlJavaTypeAdapter(Adapter1 .class)
     @XmlSchemaType(name = "date")
@@ -143,5 +146,13 @@ public class ReceiptData
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getMotive() {
+        return motive;
+    }
+
+    public void setMotive(String motive) {
+        this.motive = motive;
     }
 }

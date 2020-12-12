@@ -7,8 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface ServiceChargeDetailRepository extends JpaRepository<ServiceChargeDetailEntity,Long> {
 
-    @Query("from ServiceChargeDetailEntity scd join fetch scd.serviceCharge" +
-            " left join fetch scd.serviceCharge.payments where scd.reference=:reference ")
+    @Query(name = "ServiceChargeDetail.findByReference")
     ServiceChargeDetailEntity findByReference(@Param("reference") String reference);
 
 }

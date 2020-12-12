@@ -20,6 +20,7 @@
             <xs:element name="folio" type="xs:integer"/>
             <xs:element name="amount" type="xs:string"/>
             <xs:element name="status" type="xs:string"/>
+            <xs:element name="motive" type="xs:string"/>
             <xs:element name="datePayment" type="xs:date"/>
         </xs:sequence>
     </xs:complexType>
@@ -35,8 +36,10 @@
     <xs:complexType name="StatusPayment">
         <xs:sequence>
             <xs:element name="folio" type="xs:string"/>
+            <xs:element name="amount" type="xs:string"/>
             <xs:element name="status" type="cm:StatusPaymentCategory"/>
             <xs:element name="idTransaction" type="xs:integer"/>
+            <xs:element name="statusTransaction" type="xs:string"/>
             <xs:element name="startDateTransaction" type="xs:date"/>
             <xs:element name="finishDateTransaction" type="xs:date"/>
         </xs:sequence>

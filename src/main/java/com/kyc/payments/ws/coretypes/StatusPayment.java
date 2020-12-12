@@ -46,8 +46,10 @@ import com.kyc.payments.ws.adapters.Adapter2;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "StatusPayment", propOrder = {
     "folio",
+    "amount",
     "status",
     "idTransaction",
+    "statusTransaction",
     "startDateTransaction",
     "finishDateTransaction"
 })
@@ -58,12 +60,16 @@ public class StatusPayment
     @XmlElement(required = true)
     protected String folio;
     @XmlElement(required = true)
+    protected String amount;
+    @XmlElement(required = true)
     @XmlSchemaType(name = "string")
     protected StatusPaymentEnum status;
     @XmlElement(required = true, type = String.class)
     @XmlJavaTypeAdapter(Adapter2 .class)
     @XmlSchemaType(name = "integer")
     protected Integer idTransaction;
+    @XmlElement(required = true)
+    protected String statusTransaction;
     @XmlElement(required = true, type = String.class)
     @XmlJavaTypeAdapter(Adapter1 .class)
     @XmlSchemaType(name = "date")
@@ -193,4 +199,19 @@ public class StatusPayment
         this.finishDateTransaction = value;
     }
 
+    public String getStatusTransaction() {
+        return statusTransaction;
+    }
+
+    public void setStatusTransaction(String statusTransaction) {
+        this.statusTransaction = statusTransaction;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
 }

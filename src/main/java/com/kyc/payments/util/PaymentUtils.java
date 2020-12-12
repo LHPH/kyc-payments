@@ -4,6 +4,8 @@ import com.kyc.payments.entity.PaymentStatusEntity;
 import com.kyc.payments.ws.coretypes.StatusPayment;
 import com.kyc.payments.ws.coretypes.StatusPaymentEnum;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +37,13 @@ public class PaymentUtils {
             }
         }
         return id;
+    }
+
+    public static Timestamp getTimestamp(Date date){
+        if(date == null){
+            return Timestamp.from(new Date().toInstant());
+        }
+        return Timestamp.from(date.toInstant());
     }
 
 }
