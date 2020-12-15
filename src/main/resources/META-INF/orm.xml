@@ -20,7 +20,7 @@
 
     <named-query name="ServiceChargeDetail.findByReference">
         <query>
-            select scd from ServiceChargeDetailEntity scd join fetch scd.serviceCharge
+            from ServiceChargeDetailEntity scd join fetch scd.serviceCharge
             left join fetch scd.serviceCharge.payments where scd.reference=:reference
         </query>
     </named-query>

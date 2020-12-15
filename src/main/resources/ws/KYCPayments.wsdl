@@ -33,6 +33,12 @@
     <wsdl:message name="GetHistoricalPaymentsResponse">
         <wsdl:part element="pym:GetHistoricalPaymentsResponse" name="GetHistoricalPaymentsResponse"> </wsdl:part>
     </wsdl:message>
+    <wsdl:message name="GetStatusChargeRequest">
+        <wsdl:part element="pym:GetStatusChargeRequest" name="GetStatusChargeRequest"></wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="GetStatusChargeResponse">
+        <wsdl:part element="pym:GetStatusChargeResponse" name="GetStatusChargeResponse"></wsdl:part>
+    </wsdl:message>
 
     <wsdl:portType name="Payments">
         <wsdl:operation name="GetStatusPayment">
@@ -50,6 +56,10 @@
         <wsdl:operation name="GetInfoPayment">
             <wsdl:input message="tns:GetInfoPaymentRequest" name="GetInfoPaymentRequest"> </wsdl:input>
             <wsdl:output message="tns:GetInfoPaymentResponse" name="GetInfoPaymentResponse"> </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetStatusCharge">
+            <wsdl:input message="tns:GetStatusChargeRequest" name="GetStatusChargeRequest"></wsdl:input>
+            <wsdl:output message="tns:GetStatusChargeResponse" name="GetStatusChargeResponse"></wsdl:output>
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="PaymentsSoap11" type="tns:Payments">
@@ -90,10 +100,19 @@
                 <soap:body use="literal"/>
             </wsdl:output>
         </wsdl:operation>
+        <wsdl:operation name="GetStatusCharge">
+            <soap:operation soapAction=""/>
+            <wsdl:input name="GetStatusChargeRequest">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="GetStatusChargeResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
     </wsdl:binding>
     <wsdl:service name="KYCPayments">
         <wsdl:port binding="tns:PaymentsSoap11" name="PaymentsSoap11">
-            <soap:address location="http://localhost:9000/ws/paymentService/"/>
+            <soap:address location=" https://kyc-payments.herokuapp.com/ws/paymentService/"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

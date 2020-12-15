@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-                  xmlns:pay="http://kyc-payments.com/PaymentTypes"
-                  xmlns:com="http://kyc-payments.com/CommonTypes">
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:pay="http://kyc-payments.com/PaymentTypes">
     <soapenv:Header>
         <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" wsse:mustUnderstand="1">
             <wsse:UsernameToken>
@@ -14,14 +12,8 @@
         </dev:DeviceData>
     </soapenv:Header>
     <soapenv:Body>
-        <pay:MakePaymentRequest>
-            <pay:payment>
-                <com:reference>ABCDE1234567890</com:reference>
-                <com:source>1</com:source>
-                <com:amount>1</com:amount>
-                <com:motive>ABONO</com:motive>
-                <com:idBank>SB</com:idBank>
-            </pay:payment>
-        </pay:MakePaymentRequest>
+        <pay:GetInfoPaymentRequest>
+            <pay:folio>2</pay:folio>
+        </pay:GetInfoPaymentRequest>
     </soapenv:Body>
 </soapenv:Envelope>

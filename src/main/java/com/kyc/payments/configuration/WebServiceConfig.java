@@ -17,8 +17,8 @@ import org.springframework.xml.xsd.XsdSchema;
 
 @Configuration
 @EnableWs
-@Profile("dev2")
-public class WebServiceConfig extends WsConfigurerAdapter {
+@Profile("prod")
+public class WebServiceConfig {
 
     @Value("${service.url}")
     private String urlService;
@@ -43,6 +43,15 @@ public class WebServiceConfig extends WsConfigurerAdapter {
     }
 
     //Exposes the xsd schema in the url
+    @Bean(name="PaymentTypes")
+    public XsdSchema paymentTypes(){
+
+        ClassPathResource paymentTypes = new ClassPathResource("ws/PaymentTypes.xsd");
+        SimpleXsdSchema xsd = new SimpleXsdSchema(paymentTypes);
+        return xsd;
+    }
+
+    //Exposes the xsd schema in the url
     @Bean(name="CommonTypes")
     public XsdSchema commonTypes(){
 
@@ -51,12 +60,11 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         return xsd;
     }
 
-    //Exposes the xsd schema in the url
-    @Bean(name="PaymentTypes")
-    public XsdSchema paymentTypes(){
+    @Bean(name="AdapterTypes")
+    public XsdSchema adapterTypes(){
 
-        ClassPathResource paymentTypes = new ClassPathResource("ws/PaymentTypes.xsd");
-        SimpleXsdSchema xsd = new SimpleXsdSchema(paymentTypes);
+        ClassPathResource adapterTypes = new ClassPathResource("ws/AdapterTypes.xsd");
+        SimpleXsdSchema xsd = new SimpleXsdSchema(adapterTypes);
         return xsd;
     }
 
@@ -67,7 +75,4 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         SimpleXsdSchema xsd = new SimpleXsdSchema(headerTypes);
         return xsd;
     }
-
-
-
 }

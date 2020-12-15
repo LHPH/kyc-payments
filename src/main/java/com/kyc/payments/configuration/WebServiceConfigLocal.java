@@ -24,8 +24,8 @@ import static com.kyc.payments.constants.Constants.NAME_SPACE_WSDL_PAYMENTS_URI;
 
 @Configuration
 @EnableWs
-@Profile("dev")
-public class WebServiceConfigLocal extends WsConfigurerAdapter {
+@Profile("dev2")
+public class WebServiceConfigLocal {
 
     @Value("${service.url}")
     private String urlService;
@@ -52,6 +52,18 @@ public class WebServiceConfigLocal extends WsConfigurerAdapter {
         return definition;
     }
 
+    @Bean
+    public XsdSchemaCollection schemasCollection(){
+
+        CommonsXsdSchemaCollection collection = new CommonsXsdSchemaCollection();
+        ClassPathResource paymentTypes = new ClassPathResource("ws/PaymentTypes.xsd");
+
+        collection.setXsds(paymentTypes);
+        collection.setInline(false);
+        collection.setUriResolver(new DefaultURIResolver());
+        return collection;
+    }
+
     //Exposes the xsd schema in the url
     @Bean(name="CommonTypes")
     public XsdSchema commonTypes(){
@@ -75,23 +87,6 @@ public class WebServiceConfigLocal extends WsConfigurerAdapter {
         ClassPathResource headerTypes = new ClassPathResource("ws/HeaderTypes.xsd");
         SimpleXsdSchema xsd = new SimpleXsdSchema(headerTypes);
         return xsd;
-    }
-
-    @Bean
-    public XsdSchemaCollection schemasCollection(){
-
-        CommonsXsdSchemaCollection collection = new CommonsXsdSchemaCollection();
-        ClassPathResource paymentTypes = new ClassPathResource("ws/PaymentTypes.xsd");
-
-        collection.setXsds(paymentTypes);
-        collection.setInline(false);
-        collection.setUriResolver(new DefaultURIResolver());
-        return collection;
-    }
-
-    @Override
-    public void addInterceptors(List<EndpointInterceptor> interceptors) {
-        //interceptors.add(securityInterceptor);
     }
 
 }
