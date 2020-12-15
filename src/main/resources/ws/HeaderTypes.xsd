@@ -1,0 +1,13 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://kyc-payments.com/HeaderTypes"
+           elementFormDefault="qualified">
+    
+    <xs:element name="DeviceData">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="device" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

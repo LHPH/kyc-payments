@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:6000/landings
+    username: mkt
+    password: mkt
+    hikari:
+      maximum-pool-size: 1
+  jpa:
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false
+        format_sql: true
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+
+server:
+  port: 9000
+
+service:
+  url: http://localhost:9000/ws/paymentService/
+  
+logging:
+  level:
+    org.springframework.ws.server.MessageTracing.sent: TRACE
+    org.springframework.ws.server.MessageTracing.received: TRACE

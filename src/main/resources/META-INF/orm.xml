@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings version="2.0" xmlns="http://java.sun.com/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm
+        http://java.sun.com/xml/ns/persistence/orm_2_0.xsd ">
+
+    <named-query name="Payment.findByFolio">
+        <query>
+            select p from PaymentEntity p join fetch p.transactions t
+            join fetch t.transactionStatus where p.folio=:folio
+        </query>
+    </named-query>
+
+    <named-query name="Payment.findPaymentsFromDateAndCustomer">
+        <query>
+            select p from PaymentEntity p where p.datePayment&gt;= :dateInitial and p.datePayment&lt;= :dateFinish
+            and p.serviceCharge.customer.id=:customer order by p.datePayment desc
+        </query>
+    </named-query>
+
+    <named-query name="ServiceChargeDetail.findByReference">
+        <query>
+            from ServiceChargeDetailEntity scd join fetch scd.serviceCharge
+            left join fetch scd.serviceCharge.payments where scd.reference=:reference
+        </query>
+    </named-query>
+
+
+
+    <!--native SQL query
+    <named-native-query name="Book.findByIsbnNativeXML"
+                        result-class="com.attacomsian.jpa.named.domains.Book">
+        <query>SELECT * FROM book b WHERE b.isbn = :isbn</query>
+    </named-native-query>
+    to find a book by isbn-->
+
+</entity-mappings>

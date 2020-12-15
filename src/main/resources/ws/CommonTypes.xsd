@@ -1,0 +1,75 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+              xmlns:cm="http://kyc-payments.com/CommonTypes"
+              targetNamespace="http://kyc-payments.com/CommonTypes"
+              elementFormDefault="qualified">
+
+    <xs:import schemaLocation="AdapterTypes.xsd" namespace="http://www.w3.org/2001/XMLSchema"/>
+
+    <xs:complexType name="PaymentData">
+        <xs:sequence>
+            <xs:element name="reference" type="xs:string" />
+            <xs:element name="source" type="xs:string" />
+            <xs:element name="amount" type="xs:string" />
+            <xs:element name="motive" type="xs:string" />
+            <xs:element name="idBank" type="xs:string" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ReceiptData">
+        <xs:sequence>
+            <xs:element name="folio" type="xs:integer"/>
+            <xs:element name="amount" type="xs:string"/>
+            <xs:element name="status" type="xs:string"/>
+            <xs:element name="motive" type="xs:string"/>
+            <xs:element name="datePayment" type="xs:date"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="HistoricalPaymentCriteria">
+        <xs:sequence>
+            <xs:element name="startDate" type="xs:date" />
+            <xs:element name="finishDate" type="xs:date" />
+            <xs:element name="numRecords" type="xs:integer"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="StatusPayment">
+        <xs:sequence>
+            <xs:element name="folio" type="xs:string"/>
+            <xs:element name="amount" type="xs:string"/>
+            <xs:element name="status" type="cm:StatusPaymentCategory"/>
+            <xs:element name="idTransaction" type="xs:integer"/>
+            <xs:element name="statusTransaction" type="xs:string"/>
+            <xs:element name="startDateTransaction" type="xs:date"/>
+            <xs:element name="finishDateTransaction" type="xs:date"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="StatusCharge">
+        <xs:sequence>
+            <xs:element name="reference" type="xs:string" />
+            <xs:element name="status" type="xs:string" />
+            <xs:element name="amount" type="xs:string" />
+            <xs:element name="dateCharge" type="xs:date" />
+            <xs:element name="payments" type="cm:StatusPayment" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="ErrorWS">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="code" type="xs:string"/>
+                <xs:element name="description" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="StatusPaymentCategory">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="REJECTED" />
+            <xs:enumeration value="PAID" />
+            <xs:enumeration value="ONGOING" />
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>
