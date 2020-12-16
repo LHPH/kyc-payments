@@ -24,7 +24,7 @@ import static com.kyc.payments.constants.Constants.NAME_SPACE_WSDL_PAYMENTS_URI;
 
 @Configuration
 @EnableWs
-@Profile("dev2")
+@Profile("dev")
 public class WebServiceConfigLocal {
 
     @Value("${service.url}")
