@@ -2,10 +2,12 @@
            targetNamespace="http://kyc-payments.com/HeaderTypes"
            elementFormDefault="qualified">
     
-    <xs:element name="DeviceData">
+    <xs:element name="HeaderData">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="device" type="xs:string"/>
+                <xs:element name="transaction" type="xs:string"/>
+                <xs:element name="source" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

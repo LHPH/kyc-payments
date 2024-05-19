@@ -1,8 +1,9 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:6000/landings
-    username: mkt
-    password: mkt
+    url: jdbc:postgresql://localhost:6000/kyc_database
+    username: kyc_user
+    password: kyc_pass
+    driverClassName: org.postgresql.Driver
     hikari:
       maximum-pool-size: 1
   jpa:
@@ -13,13 +14,16 @@ spring:
         format_sql: true
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect
 
-server:
-  port: 9000
-
 service:
-  url: http://localhost:9000/ws/paymentService/
-  
+  url: http://localhost:9008/kyc/soap/KYCPayments
+
 logging:
   level:
+    root: INFO
+    com.kyc: INFO
+    org.springframework: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
+    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: TRACE
     org.springframework.ws.server.MessageTracing.sent: TRACE
     org.springframework.ws.server.MessageTracing.received: TRACE

@@ -4,34 +4,60 @@
                  xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm
         http://java.sun.com/xml/ns/persistence/orm_2_0.xsd ">
 
-    <named-query name="Payment.findByFolio">
+    <named-query name="KycPayment.findByFolioWithTransactions">
         <query>
-            select p from PaymentEntity p join fetch p.transactions t
-            join fetch t.transactionStatus where p.folio=:folio
+            select p from KycPayment p join fetch p.transactions t
+            where p.folio=:folio
         </query>
     </named-query>
 
-    <named-query name="Payment.findPaymentsFromDateAndCustomer">
+    <named-query name="KycPayment.findByFolioAndCustomer">
         <query>
-            select p from PaymentEntity p where p.datePayment&gt;= :dateInitial and p.datePayment&lt;= :dateFinish
-            and p.serviceCharge.customer.id=:customer order by p.datePayment desc
+            select p from KycPayment p where p.folio=:folio
+            and p.idUser=:idCustomer
         </query>
     </named-query>
 
-    <named-query name="ServiceChargeDetail.findByReference">
+    <named-query name="KycPayment.findByReferenceAndCustomer">
         <query>
-            from ServiceChargeDetailEntity scd join fetch scd.serviceCharge
-            left join fetch scd.serviceCharge.payments where scd.reference=:reference
+            select p from KycPayment p where p.reference=:reference
+            and p.idUser=:idCustomer
         </query>
     </named-query>
 
+    <named-query name="KycPayment.findPaymentsFromDate">
+        <query>
+            select p from KycPayment p where p.datePayment&gt;= :dateInitial and p.datePayment&lt;= :dateFinish
+            order by p.datePayment desc
+        </query>
+    </named-query>
 
+    <named-query name="KycPayment.findPaymentsFromDateAndCustomer">
+        <query>
+            select p from KycPayment p where p.datePayment&gt;= :dateInitial and p.datePayment&lt;= :dateFinish
+            and p.idCustomer=:idCustomer
+            order by p.datePayment desc
+        </query>
+    </named-query>
 
-    <!--native SQL query
-    <named-native-query name="Book.findByIsbnNativeXML"
-                        result-class="com.attacomsian.jpa.named.domains.Book">
-        <query>SELECT * FROM book b WHERE b.isbn = :isbn</query>
+    <named-query name="KycCustomerPaymentMethod.findAllCustomerPaymentMethod">
+        <query>
+            select p from KycCustomerPaymentMethod p where p.idCustomer=:idCustomer
+            order by p.creationDate asc
+        </query>
+    </named-query>
+
+    <named-query name="KycCustomerPaymentMethod.findAuthMethodToPay">
+        <query>
+            select p from KycCustomerPaymentMethod p where p.idCustomer=:idCustomer
+            and p.active=true and p.authorize=true and p.idPaymentMethod=:method
+        </query>
+    </named-query>
+
+    <!--native SQL query-->
+    <named-native-query name="KycParameter.getKey"
+                        result-class="com.kyc.core.persistence.entity.KycParameter">
+        <query>SELECT PARAM_KEY,PARAM_VALUE FROM KYC_PARAMETERS WHERE PARAM_KEY = ?1</query>
     </named-native-query>
-    to find a book by isbn-->
 
 </entity-mappings>

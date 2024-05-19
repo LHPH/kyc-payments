@@ -1,7 +1,7 @@
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-              targetNamespace="http://kyc-payments.com/PaymentTypes"
-              xmlns:cmn="http://kyc-payments.com/CommonTypes"
-              elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:cmn="http://kyc-payments.com/CommonTypes"
+           targetNamespace="http://kyc-payments.com/PaymentTypes"
+           elementFormDefault="qualified">
 
     <xs:import schemaLocation="CommonTypes.xsd" namespace="http://kyc-payments.com/CommonTypes"/>
     <xs:import schemaLocation="HeaderTypes.xsd" namespace="http://kyc-payments.com/HeaderTypes"/>
@@ -22,22 +22,6 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="GetInfoPaymentRequest">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="folio" type="xs:integer"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-
-    <xs:element name="GetInfoPaymentResponse">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="receipt" type="cmn:ReceiptData"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-
     <xs:element name="GetHistoricalPaymentsRequest">
         <xs:complexType>
             <xs:sequence>
@@ -49,44 +33,52 @@
     <xs:element name="GetHistoricalPaymentsResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="clientNumber" type="xs:integer"/>
-                <xs:element maxOccurs="unbounded" name="payments" type="cmn:ReceiptData"/>
+                <xs:element maxOccurs="unbounded" name="payments" type="cmn:PaymentRecord"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="GetStatusPaymentRequest">
+    <xs:element name="GetPaymentRequest">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="folio" type="xs:integer"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-
-    <xs:element name="GetStatusPaymentResponse">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="statusPayment" type="cmn:StatusPayment"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-
-    <xs:element name="GetStatusChargeRequest">
-        <xs:complexType>
-            <xs:sequence>
                 <xs:element name="reference" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="GetStatusChargeResponse">
+    <xs:element name="GetPaymentResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="statusCharge" type="cmn:StatusCharge"/>
+                <xs:element name="payment" type="cmn:PaymentRecord"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="UpdateCustomerPaymentMethodRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="paymentMethod" type="cmn:CustomerPaymentMethod"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
+    <xs:element name="UpdateCustomerPaymentMethodResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="message" type="xs:string" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="GetCustomerPaymentMethodRequest" />
+
+    <xs:element name="GetCustomerPaymentMethodResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="paymentMethods" maxOccurs="unbounded" type="cmn:CustomerPaymentMethod"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
 </xs:schema>

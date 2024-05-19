@@ -1,26 +1,13 @@
 package com.kyc.payments.helpers;
 
-import com.kyc.payments.entity.BankEntity;
-import com.kyc.payments.entity.PaymentEntity;
-import com.kyc.payments.entity.PaymentStatusEntity;
-import com.kyc.payments.entity.ServiceChargeDetailEntity;
-import com.kyc.payments.entity.TransactionStatusEntity;
-import com.kyc.payments.entity.TransactionsEntity;
+import com.kyc.payments.entity.KycPaymentOffice;
+import com.kyc.payments.entity.KycPayment;
+import com.kyc.payments.entity.KycTransaction;
 import com.kyc.payments.enums.TransactionStatusEnum;
 import com.kyc.payments.util.PaymentUtils;
-import com.kyc.payments.ws.coretypes.PaymentData;
-import com.kyc.payments.ws.coretypes.ReceiptData;
-import com.kyc.payments.ws.coretypes.StatusCharge;
-import com.kyc.payments.ws.coretypes.StatusPayment;
-import com.kyc.payments.ws.coretypes.StatusPaymentEnum;
-import com.kyc.payments.ws.paymenttypes.GetHistoricalPaymentsResponse;
-import com.kyc.payments.ws.paymenttypes.GetInfoPaymentResponse;
-import com.kyc.payments.ws.paymenttypes.GetStatusChargeResponse;
-import com.kyc.payments.ws.paymenttypes.GetStatusPaymentResponse;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -28,8 +15,8 @@ import java.util.Optional;
 @Component
 public class PaymentHelper {
 
-
-    public GetStatusPaymentResponse getStatusPayment(PaymentEntity payment){
+    /*
+    public GetStatusPaymentResponse getStatusPayment(KycPayment payment){
 
         GetStatusPaymentResponse response = new GetStatusPaymentResponse();
         StatusPayment status = new StatusPayment();
@@ -37,8 +24,8 @@ public class PaymentHelper {
         status.setFolio(String.valueOf(payment.getFolio()));
         status.setAmount(payment.getAmount());
 
-        List<TransactionsEntity> transactions = payment.getTransactions();
-        TransactionsEntity latest = transactions.get(0);
+        List<KycTransaction> transactions = payment.getTransactions();
+        KycTransaction latest = transactions.get(0);
         TransactionStatusEntity latestStatus = Optional.ofNullable(latest.getTransactionStatus())
                 .orElse(new TransactionStatusEntity());
 
@@ -63,9 +50,9 @@ public class PaymentHelper {
         status.setDateCharge(chargeDetail.getDate());
         status.setStatus(chargeDetail.getPaid()?"PAID":"UNPAID");
 
-        List<PaymentEntity> payments = chargeDetail.getServiceCharge().getPayments();
+        List<KycPayment> payments = chargeDetail.getServiceCharge().getPayments();
 
-        for(PaymentEntity payment : payments){
+        for(KycPayment payment : payments){
             status.getPayments().add(getStatusPayment(payment).getStatusPayment());
         }
 
@@ -73,7 +60,7 @@ public class PaymentHelper {
         return response;
     }
 
-    public GetInfoPaymentResponse getInfoPayment(PaymentEntity payment){
+    public GetInfoPaymentResponse getInfoPayment(KycPayment payment){
 
         GetInfoPaymentResponse response =  new GetInfoPaymentResponse();
         //List<TransactionsEntity> transactions = payment.getTransactions();
@@ -91,12 +78,12 @@ public class PaymentHelper {
 
     }
 
-    public PaymentEntity preparePayment(PaymentData paymentData){
+    public KycPayment preparePayment(PaymentData paymentData){
 
         PaymentStatusEntity paymentStatus = new PaymentStatusEntity();
         paymentStatus.setId(PaymentUtils.getIdStatusPayment(StatusPaymentEnum.PAYMENT_ONGOING));
 
-        PaymentEntity payment = new PaymentEntity();
+        KycPayment payment = new KycPayment();
         payment.setAmount(paymentData.getAmount());
         payment.setMotive(paymentData.getMotive());
         payment.setDatePayment(new Date());
@@ -106,12 +93,12 @@ public class PaymentHelper {
         return payment;
     }
 
-    public TransactionsEntity prepareTransaction(BankEntity bank){
+    public KycTransaction prepareTransaction(KycPaymentOffice bank){
 
         TransactionStatusEntity transactionStatus = new TransactionStatusEntity();
         transactionStatus.setId(TransactionStatusEnum.SEND.getIdStatusTransaction());
 
-        TransactionsEntity transaction = new TransactionsEntity();
+        KycTransaction transaction = new KycTransaction();
         transaction.setBank(bank);
         transaction.setDateStart(new Timestamp(new Date().getTime()));
         transaction.setSource("KYC");
@@ -122,13 +109,14 @@ public class PaymentHelper {
 
     }
 
-    public GetHistoricalPaymentsResponse getHistoricalPayments(List<PaymentEntity> payments){
+    public GetHistoricalPaymentsResponse getHistoricalPayments(List<KycPayment> payments){
 
         GetHistoricalPaymentsResponse response = new GetHistoricalPaymentsResponse();
-        for(PaymentEntity payment: payments){
+        for(KycPayment payment: payments){
             response.getPayments().add(getInfoPayment(payment).getReceipt());
         }
         return response;
     }
+     */
 
 }

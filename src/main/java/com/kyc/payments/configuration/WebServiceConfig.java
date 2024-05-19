@@ -16,23 +16,9 @@ import org.springframework.xml.xsd.XsdSchema;
 
 
 @Configuration
-@EnableWs
 @Profile("prod")
 public class WebServiceConfig {
 
-    @Value("${service.url}")
-    private String urlService;
-
-    @Bean
-    public ServletRegistrationBean messageDispatcherServlet(ApplicationContext ctx){
-
-        MessageDispatcherServlet servlet = new MessageDispatcherServlet();
-        servlet.setApplicationContext(ctx);
-        servlet.setTransformWsdlLocations(true);
-        return new ServletRegistrationBean(servlet,"/ws/*");
-    }
-
-    //http://localhost:9000/ws/paymentService/KYCPayments.wsdl
     @Bean(name="KYCPayments")
     public SimpleWsdl11Definition payments(){
 
@@ -57,14 +43,6 @@ public class WebServiceConfig {
 
         ClassPathResource commonTypes = new ClassPathResource("ws/CommonTypes.xsd");
         SimpleXsdSchema xsd = new SimpleXsdSchema(commonTypes);
-        return xsd;
-    }
-
-    @Bean(name="AdapterTypes")
-    public XsdSchema adapterTypes(){
-
-        ClassPathResource adapterTypes = new ClassPathResource("ws/AdapterTypes.xsd");
-        SimpleXsdSchema xsd = new SimpleXsdSchema(adapterTypes);
         return xsd;
     }
 

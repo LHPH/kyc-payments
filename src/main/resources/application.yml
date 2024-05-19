@@ -3,11 +3,14 @@ spring:
     name: kyc-payments
   profiles:
     active: dev
-  jackson:
-    default-property-inclusion: NON_NULL
+  webservices:
+    path: /kyc
   jpa:
     open-in-view: false
-    
+
+server:
+  port: 9008
+
 management:
   endpoints:
     web:
@@ -19,13 +22,27 @@ management:
   health:
     diskspace:
       enabled: false
-      
-      
-logging:
-  level:
-    root: INFO
-    com.kyc: INFO
-    org.springframework: INFO
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql: TRACE
-    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: TRACE
+
+kyc-messages:
+  catalog:
+    messages:
+      "001":
+        code: KYC-PAYMENTS-001
+        message: Unexpected Error
+        type: ERROR
+      "002":
+        code: KYC-PAYMENTS-002
+        message: The operation is not allowed
+        type: ERROR
+      "003":
+        code: KYC-PAYMENTS-003
+        message: The data are invalid
+        type: ERROR
+      "004":
+        code: KYC-PAYMENTS-004
+        message: The payment cannot be processed
+        type: ERROR
+      "005":
+        code: KYC-PAYMENTS-005
+        message: The operation could not be performed at this moment
+        type: ERROR

@@ -1,19 +1,18 @@
 package com.kyc.payments.endpoints;
 
-import com.kyc.payments.exceptions.KycPaymentsException;
+import com.kyc.payments.services.CustomerPaymentMethodService;
+import com.kyc.payments.services.PaymentInfoService;
 import com.kyc.payments.services.PaymentService;
 import com.kyc.payments.util.SoapHeaderUtil;
-import com.kyc.payments.ws.headertypes.DeviceData;
+import com.kyc.payments.ws.paymenttypes.GetCustomerPaymentMethodResponse;
 import com.kyc.payments.ws.paymenttypes.GetHistoricalPaymentsRequest;
 import com.kyc.payments.ws.paymenttypes.GetHistoricalPaymentsResponse;
-import com.kyc.payments.ws.paymenttypes.GetInfoPaymentRequest;
-import com.kyc.payments.ws.paymenttypes.GetInfoPaymentResponse;
-import com.kyc.payments.ws.paymenttypes.GetStatusChargeRequest;
-import com.kyc.payments.ws.paymenttypes.GetStatusChargeResponse;
-import com.kyc.payments.ws.paymenttypes.GetStatusPaymentRequest;
-import com.kyc.payments.ws.paymenttypes.GetStatusPaymentResponse;
+import com.kyc.payments.ws.paymenttypes.GetPaymentRequest;
+import com.kyc.payments.ws.paymenttypes.GetPaymentResponse;
 import com.kyc.payments.ws.paymenttypes.MakePaymentRequest;
 import com.kyc.payments.ws.paymenttypes.MakePaymentResponse;
+import com.kyc.payments.ws.paymenttypes.UpdateCustomerPaymentMethodRequest;
+import com.kyc.payments.ws.paymenttypes.UpdateCustomerPaymentMethodResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,76 +25,67 @@ import org.springframework.ws.soap.server.endpoint.annotation.SoapHeader;
 
 import java.lang.invoke.MethodHandles;
 
-import static com.kyc.payments.constants.Constants.NAME_SPACE_HEADER_URI;
-import static com.kyc.payments.constants.Constants.NAME_SPACE_PAYMENTS_URI;
+import static com.kyc.payments.constants.AppConstants.NAME_SPACE_HEADER_URI;
+import static com.kyc.payments.constants.AppConstants.NAME_SPACE_PAYMENTS_URI;
 
 @Endpoint
 public class PaymentServiceEndpoint {
 
     public static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
 
-    public static final String HEADER_DEVICE_TYPES = "{"+NAME_SPACE_HEADER_URI+"}DeviceData";
+    public static final String HEADER_TYPES = "{"+NAME_SPACE_HEADER_URI+"}HeaderData";
 
     @Autowired
     private PaymentService paymentService;
 
+    @Autowired
+    private CustomerPaymentMethodService customerPaymentMethodService;
+
+    @Autowired
+    private PaymentInfoService paymentInfoService;
+
     @PayloadRoot(localPart = "MakePaymentRequest", namespace = NAME_SPACE_PAYMENTS_URI)
     @ResponsePayload
     public MakePaymentResponse makePayment(@RequestPayload MakePaymentRequest request,
-                                           @SoapHeader(HEADER_DEVICE_TYPES) SoapHeaderElement soapHeader) throws KycPaymentsException {
+                                           @SoapHeader(HEADER_TYPES) SoapHeaderElement soapHeader) {
 
         LOGGER.info("Consumiendo endpoint de pagos");
-        DeviceData deviceData = SoapHeaderUtil.getHeaderDeviceData(soapHeader);
-        LOGGER.info("Request viene de un dispositivo {}",deviceData.getDevice());
         return paymentService.payService(request);
     }
 
-    @PayloadRoot(localPart = "GetStatusPaymentRequest",namespace = NAME_SPACE_PAYMENTS_URI)
+
+    @PayloadRoot(localPart = "GetPaymentRequest",namespace = NAME_SPACE_PAYMENTS_URI)
     @ResponsePayload
-    public GetStatusPaymentResponse getStatusPayment(@RequestPayload GetStatusPaymentRequest request,
-                                                     org.springframework.ws.soap.SoapHeader soapHeader)
-                                                    throws KycPaymentsException{
+    public GetPaymentResponse getPayment(@RequestPayload GetPaymentRequest request,
+                                         org.springframework.ws.soap.SoapHeader soapHeader){
 
         LOGGER.info("Consumiendo operacion de status payment");
-        DeviceData deviceData = SoapHeaderUtil.getInfoHeaders(soapHeader);
-        LOGGER.info("Info de Headers {}",deviceData.getDevice());
-        return paymentService.getStatusPayment(request);
+        return paymentInfoService.getPayment(request);
     }
 
-    @PayloadRoot(localPart = "GetStatusChargeRequest",namespace = NAME_SPACE_PAYMENTS_URI)
+    @PayloadRoot(localPart = "GetCustomerPaymentMethodRequest",namespace = NAME_SPACE_PAYMENTS_URI)
     @ResponsePayload
-    public GetStatusChargeResponse getStatusCharge(@RequestPayload GetStatusChargeRequest request,
-                                                   @SoapHeader(HEADER_DEVICE_TYPES) SoapHeaderElement soapHeader)
-                                                    throws KycPaymentsException{
+    public GetCustomerPaymentMethodResponse getCustomerPaymentMethod(@SoapHeader(HEADER_TYPES) SoapHeaderElement soapHeader) {
 
-        LOGGER.info("Consumiendo operacion de status charge");
-        DeviceData deviceData = SoapHeaderUtil.getHeaderDeviceData(soapHeader);
-        LOGGER.info("Request viene de un dispositivo {}",deviceData.getDevice());
-        return paymentService.getStatusCharge(request);
+       return customerPaymentMethodService.getCustomerPaymentMethods();
     }
 
     @PayloadRoot(localPart = "GetHistoricalPaymentsRequest",namespace = NAME_SPACE_PAYMENTS_URI)
     @ResponsePayload
     public GetHistoricalPaymentsResponse getHistoricalPayments(@RequestPayload GetHistoricalPaymentsRequest request,
-                                                               @SoapHeader(HEADER_DEVICE_TYPES) SoapHeaderElement soapHeader)
-                                                                throws KycPaymentsException{
+                                                               @SoapHeader(HEADER_TYPES) SoapHeaderElement soapHeader) {
 
         LOGGER.info("Consumiendo operacion de obtencion de historico de pagos");
-        DeviceData deviceData = SoapHeaderUtil.getHeaderDeviceData(soapHeader);
-        LOGGER.info("Request viene de un dispositivo {}",deviceData.getDevice());
-        return paymentService.getHistoricalPayments(request);
+        return paymentInfoService.getHistoricalPayments(request);
     }
 
-    @PayloadRoot(localPart = "GetInfoPaymentRequest",namespace = NAME_SPACE_PAYMENTS_URI)
+    @PayloadRoot(localPart = "UpdateCustomerPaymentMethodRequest",namespace = NAME_SPACE_PAYMENTS_URI)
     @ResponsePayload
-    public GetInfoPaymentResponse getInfoPayment(@RequestPayload GetInfoPaymentRequest request,
-                                                 @SoapHeader(HEADER_DEVICE_TYPES) SoapHeaderElement soapHeader)
-                                                    throws KycPaymentsException{
+    public UpdateCustomerPaymentMethodResponse updateCustomerPaymentMethod(@RequestPayload UpdateCustomerPaymentMethodRequest request,
+                                                                           @SoapHeader(HEADER_TYPES) SoapHeaderElement soapHeader) {
 
         LOGGER.info("Consumiendo operacion de info de pago");
-        DeviceData deviceData = SoapHeaderUtil.getHeaderDeviceData(soapHeader);
-        LOGGER.info("Request viene de un dispositivo {}",deviceData.getDevice());
-        return paymentService.getInfoPayment(request);
+        return customerPaymentMethodService.saveCustomerPaymentMethod(request);
     }
 
 }

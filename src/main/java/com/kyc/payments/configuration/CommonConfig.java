@@ -1,105 +1,36 @@
 package com.kyc.payments.configuration;
 
-import com.kyc.payments.exceptions.DetailSoapFaultDefinitionExceptionResolver;
-import com.kyc.payments.exceptions.KycPaymentExceptionResolver;
-import com.kyc.payments.exceptions.KycUserAuthExceptionResolver;
-import com.kyc.payments.security.KycAuthProvider;
-import com.kyc.payments.services.KycAuthService;
+import com.kyc.core.exception.handlers.KycGenericSoapExceptionHandler;
+import com.kyc.core.model.MessageData;
+import com.kyc.core.properties.KycMessages;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.ws.config.annotation.WsConfigurerAdapter;
-import org.springframework.ws.server.EndpointInterceptor;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
-import org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor;
-import org.springframework.ws.soap.security.xwss.callback.SpringPlainTextPasswordValidationCallbackHandler;
-import org.springframework.ws.soap.server.endpoint.SoapFaultDefinition;
-import org.springframework.ws.soap.server.endpoint.SoapFaultMappingExceptionResolver;
-
-import java.util.List;
-import java.util.Properties;
+import static com.kyc.payments.constants.AppConstants.ERROR_CODE_001;
 
 
 @Configuration
-public class CommonConfig extends WsConfigurerAdapter{
+@Import(value = {KycMessages.class})
+@EnableJpaRepositories(basePackages = {"com.kyc.core.persistence.repositories","com.kyc.payments.repositories"})
+@EntityScan(basePackages = {"com.kyc.core.persistence.entity","com.kyc.payments.entity"})
+public class CommonConfig{
 
     @Bean
-    public SoapFaultMappingExceptionResolver exceptionResolver() {
-        SoapFaultMappingExceptionResolver exceptionResolver = new DetailSoapFaultDefinitionExceptionResolver();
+    public Jaxb2Marshaller marshaller(){
 
-        SoapFaultDefinition faultDefinition = new SoapFaultDefinition();
-        faultDefinition.setFaultCode(SoapFaultDefinition.SERVER);
-        faultDefinition.setFaultStringOrReason("Internal Server Error");
-        exceptionResolver.setDefaultFault(faultDefinition);
-
-        Properties errorMappings = new Properties();
-        errorMappings.setProperty(Exception.class.getName(), SoapFaultDefinition.SERVER.toString());
-        exceptionResolver.setExceptionMappings(errorMappings);
-        exceptionResolver.setOrder(2);
-
-        return exceptionResolver;
+        Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+        marshaller.setClassesToBeBound(MessageData.class);
+        return marshaller;
     }
 
     @Bean
-    public KycPaymentExceptionResolver kycPaymentExceptionResolver() {
+    public KycGenericSoapExceptionHandler kycGenericSoapExceptionHandler(KycMessages kycMessages) {
 
-        KycPaymentExceptionResolver kycPaymentExceptionResolver = new KycPaymentExceptionResolver();
-        kycPaymentExceptionResolver.setOrder(1);
-
-        return kycPaymentExceptionResolver;
-    }
-
-    @Bean
-    public ProviderManager authenticationManager(){
-
-        ProviderManager manager = new ProviderManager(authenticationProvider());
-        return manager;
-    }
-
-    @Bean
-    public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public KycAuthProvider authenticationProvider(){
-
-        KycAuthProvider auth = new KycAuthProvider();
-        auth.setKycAuthService(kycAuthService());
-        auth.setPasswordEncoder(encoder());
-        return auth;
-    }
-
-    @Bean
-    public KycAuthService kycAuthService(){
-        KycAuthService kycAuthService = new KycAuthService();
-        return kycAuthService;
-    }
-
-    @Bean
-    public XwsSecurityInterceptor securityInterceptor(){
-
-        XwsSecurityInterceptor securityInterceptor = new XwsSecurityInterceptor();
-        securityInterceptor.setPolicyConfiguration(new ClassPathResource("securityPolicy.xml"));
-        securityInterceptor.setCallbackHandler(securityCallbackHandler());
-        securityInterceptor.setExceptionResolver(new KycUserAuthExceptionResolver());
-        return securityInterceptor;
-    }
-
-    @Bean
-    public SpringPlainTextPasswordValidationCallbackHandler securityCallbackHandler() {
-
-        SpringPlainTextPasswordValidationCallbackHandler  handler = new SpringPlainTextPasswordValidationCallbackHandler();
-        handler.setAuthenticationManager(authenticationManager());
-        return handler;
-    }
-
-    @Override
-    public void addInterceptors(List<EndpointInterceptor> interceptors) {
-        interceptors.add(securityInterceptor());
+        return new KycGenericSoapExceptionHandler(kycMessages.getMessage(ERROR_CODE_001), marshaller());
     }
 
 }

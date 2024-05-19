@@ -1,6 +1,5 @@
 package com.kyc.payments.util;
 
-import com.kyc.payments.ws.headertypes.DeviceData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.ws.soap.SoapHeaderElement;
@@ -11,17 +10,15 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
-import static com.kyc.payments.constants.Constants.NAME_SPACE_HEADER_URI;
-import static com.kyc.payments.constants.Constants.NAME_SPACE_PAYMENTS_URI;
+import static com.kyc.payments.constants.AppConstants.NAME_SPACE_HEADER_URI;
 
 public class SoapHeaderUtil {
 
     public static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
 
+    /*
     public static DeviceData getHeaderDeviceData(SoapHeaderElement headerElement){
 
         if(headerElement!=null){
@@ -60,6 +57,6 @@ public class SoapHeaderUtil {
         DeviceData dev = new DeviceData();
         dev.setDevice("");
         return dev;
-    }
+    }*/
 
 }
