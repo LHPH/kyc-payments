@@ -1,16 +1,6 @@
 package com.kyc.payments.helpers;
 
-import com.kyc.payments.entity.KycPaymentOffice;
-import com.kyc.payments.entity.KycPayment;
-import com.kyc.payments.entity.KycTransaction;
-import com.kyc.payments.enums.TransactionStatusEnum;
-import com.kyc.payments.util.PaymentUtils;
 import org.springframework.stereotype.Component;
-
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 @Component
 public class PaymentHelper {

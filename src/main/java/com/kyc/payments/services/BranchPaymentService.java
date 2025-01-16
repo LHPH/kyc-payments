@@ -13,14 +13,12 @@ import com.kyc.payments.mappers.PaymentMapper;
 import com.kyc.payments.ws.coretypes.PaymentData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ws.soap.server.endpoint.SoapFaultDefinition;
 
 import static com.kyc.payments.constants.AppConstants.ERROR_CODE_002;
 import static com.kyc.payments.constants.AppConstants.ERROR_CODE_004;
-import static com.kyc.payments.constants.AppConstants.ERROR_CODE_005;
 
 @Service
 public class BranchPaymentService {

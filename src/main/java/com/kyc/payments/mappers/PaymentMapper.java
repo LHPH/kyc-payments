@@ -14,9 +14,6 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Mappings;
 import org.mapstruct.Named;
 
-import java.time.Instant;
-import java.time.ZoneId;
-
 @Mapper(componentModel = "spring")
 public interface PaymentMapper {
 

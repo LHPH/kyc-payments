@@ -1,7 +1,6 @@
 package com.kyc.payments.util;
 
 import javax.xml.bind.DatatypeConverter;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;

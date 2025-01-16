@@ -8,7 +8,6 @@ import com.kyc.core.security.SecureKycUser;
 import com.kyc.payments.entity.KycPayment;
 import com.kyc.payments.helpers.PaymentHelper;
 import com.kyc.payments.mappers.PaymentMapper;
-import com.kyc.payments.repositories.KycCustomerRepository;
 import com.kyc.payments.repositories.KycPaymentRepository;
 import com.kyc.payments.ws.coretypes.HistoricalPaymentCriteria;
 import com.kyc.payments.ws.coretypes.PaymentRecord;
@@ -26,12 +25,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ws.soap.server.endpoint.SoapFaultDefinition;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.kyc.payments.constants.AppConstants.ERROR_CODE_002;
 import static com.kyc.payments.constants.AppConstants.ERROR_CODE_005;

@@ -3,7 +3,6 @@ package com.kyc.payments.endpoints;
 import com.kyc.payments.services.CustomerPaymentMethodService;
 import com.kyc.payments.services.PaymentInfoService;
 import com.kyc.payments.services.PaymentService;
-import com.kyc.payments.util.SoapHeaderUtil;
 import com.kyc.payments.ws.paymenttypes.GetCustomerPaymentMethodResponse;
 import com.kyc.payments.ws.paymenttypes.GetHistoricalPaymentsRequest;
 import com.kyc.payments.ws.paymenttypes.GetHistoricalPaymentsResponse;

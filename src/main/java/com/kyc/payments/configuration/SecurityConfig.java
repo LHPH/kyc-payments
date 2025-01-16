@@ -3,15 +3,12 @@ package com.kyc.payments.configuration;
 import com.kyc.core.exception.handlers.KycGenericSoapExceptionHandler;
 import com.kyc.core.services.KycUserDetailsService;
 import com.kyc.core.soap.security.SpringUsernameTokenValidator;
-import org.apache.wss4j.common.WSS4JConstants;
 import org.apache.wss4j.dom.WSConstants;
 import org.apache.wss4j.dom.engine.WSSConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -25,13 +22,13 @@ import org.springframework.ws.config.annotation.WsConfigurerAdapter;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor;
 import org.springframework.ws.soap.security.wss4j2.callback.SpringSecurityPasswordValidationCallbackHandler;
-import org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor;
 
 import java.util.List;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true,prePostEnabled = true)
 public class SecurityConfig extends WsConfigurerAdapter {
 
     @Autowired
@@ -41,20 +38,19 @@ public class SecurityConfig extends WsConfigurerAdapter {
     public WebSecurityCustomizer webSecurityCustomizer() {
         // Spring Security should completely ignore URLs starting with /resources/
         return (web) -> web.ignoring()
-                .antMatchers("/resources/**");
+                .requestMatchers("/resources/**");
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        return http.authorizeRequests((authorize) -> authorize
-                        .antMatchers("/kyc/**","/actuator/**")
+        return http.authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/kyc/**","/actuator/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
                 .csrf(CsrfConfigurer::disable)
-                .httpBasic()
-                .and()
+                .httpBasic(withDefaults())
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )

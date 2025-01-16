@@ -2,17 +2,8 @@ package com.kyc.payments.util;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.ws.soap.SoapHeaderElement;
-import org.springframework.ws.soap.SoapHeader;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.namespace.QName;
 import java.lang.invoke.MethodHandles;
-import java.util.Iterator;
-
-import static com.kyc.payments.constants.AppConstants.NAME_SPACE_HEADER_URI;
 
 public class SoapHeaderUtil {
 

@@ -3,7 +3,6 @@ package com.kyc.payments.mappers;
 import com.kyc.core.util.GeneralUtil;
 import com.kyc.payments.entity.KycCustomerPaymentMethod;
 import com.kyc.payments.ws.coretypes.CustomerPaymentMethod;
-import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
