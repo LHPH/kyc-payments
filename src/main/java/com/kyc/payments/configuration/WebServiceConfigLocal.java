@@ -21,7 +21,7 @@ public class WebServiceConfigLocal {
     @Value("${service.url}")
     private String urlService;
 
-    //http://localhost:9000/ws/paymentService/KYCPayments.wsdl
+    //http://localhost:9008/kyc/soap/KYCPayments
     @Bean(name="KYCPayments")
     public DefaultWsdl11Definition payments(){
 

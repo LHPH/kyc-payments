@@ -18,7 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.ws.config.annotation.WsConfigurerAdapter;
+import org.springframework.ws.config.annotation.WsConfigurer;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor;
 import org.springframework.ws.soap.security.wss4j2.callback.SpringSecurityPasswordValidationCallbackHandler;
@@ -29,7 +29,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WsConfigurerAdapter {
+public class SecurityConfig implements WsConfigurer {
 
     @Autowired
     private KycGenericSoapExceptionHandler kycGenericSoapExceptionHandler;
@@ -70,9 +70,8 @@ public class SecurityConfig extends WsConfigurerAdapter {
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider(){
 
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService());
         provider.setPasswordEncoder(encoder());
-        provider.setUserDetailsService(userDetailsService());
         return provider;
     }
 
