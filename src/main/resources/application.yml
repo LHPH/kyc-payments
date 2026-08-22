@@ -30,10 +30,12 @@ kyc-messages:
         code: KYC-PAYMENTS-001
         message: Unexpected Error
         type: ERROR
+        hint: UNEXPECTED
       "002":
         code: KYC-PAYMENTS-002
         message: The operation is not allowed
         type: ERROR
+        hint: AUTH
       "003":
         code: KYC-PAYMENTS-003
         message: The data are invalid

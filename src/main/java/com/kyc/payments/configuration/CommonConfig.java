@@ -2,6 +2,7 @@ package com.kyc.payments.configuration;
 
 import com.kyc.core.exception.handlers.KycGenericSoapExceptionHandler;
 import com.kyc.core.model.MessageData;
+import com.kyc.core.model.XmlMessageData;
 import com.kyc.core.properties.KycMessages;
 import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import org.springframework.context.annotation.Bean;
@@ -23,14 +24,14 @@ public class CommonConfig{
     public Jaxb2Marshaller marshaller(){
 
         Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-        marshaller.setClassesToBeBound(MessageData.class);
+        marshaller.setClassesToBeBound(XmlMessageData.class);
         return marshaller;
     }
 
     @Bean
     public KycGenericSoapExceptionHandler kycGenericSoapExceptionHandler(KycMessages kycMessages) {
 
-        return new KycGenericSoapExceptionHandler(kycMessages.getMessage(ERROR_CODE_001), marshaller());
+        return new KycGenericSoapExceptionHandler(kycMessages, marshaller());
     }
 
 }
