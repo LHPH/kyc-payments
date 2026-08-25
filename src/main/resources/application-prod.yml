@@ -16,6 +16,11 @@ spring:
         format_sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
+
+kyc-config:
+  services:
+    kyc-users: http://192.168.100.61:9004
+
 logging:
   file:
     name: /opt/kyc/logs/${spring.application.name}.log
