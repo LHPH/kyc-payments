@@ -48,3 +48,7 @@ kyc-messages:
         code: KYC-PAYMENTS-005
         message: The operation could not be performed at this moment
         type: ERROR
+      "006":
+        code: KYC-PAYMENTS-006
+        message: The payment was rejected
+        type: ERROR

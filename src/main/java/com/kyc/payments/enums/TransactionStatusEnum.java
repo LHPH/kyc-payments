@@ -12,7 +12,7 @@ public enum TransactionStatusEnum {
     DECLINED(5),
     FAILED(6);
 
-    private int idStatusTransaction;
+    private final int idStatusTransaction;
 
     private TransactionStatusEnum(int id){
         this.idStatusTransaction = id;

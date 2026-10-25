@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class CatalogService {
 
@@ -38,7 +40,11 @@ public class CatalogService {
 
     @Cacheable(value = "CATALOG")
     public String getPaymentOfficeDesc(Integer id){
-        return kycPaymentOfficeRepository.findById(id)
+
+        return Optional.ofNullable(id)
+                .map(value ->kycPaymentOfficeRepository.findById(id))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .map(KycPaymentOffice::getName)
                 .orElse("");
     }

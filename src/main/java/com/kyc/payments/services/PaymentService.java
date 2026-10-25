@@ -7,6 +7,7 @@ import com.kyc.core.security.SecureKycUser;
 import com.kyc.core.util.DateUtil;
 import com.kyc.payments.entity.KycPayment;
 import com.kyc.payments.enums.CustomerPaymentMethodEnum;
+import com.kyc.payments.enums.PaymentStatusEnum;
 import com.kyc.payments.helpers.PaymentHelper;
 import com.kyc.payments.repositories.KycPaymentOfficeRepository;
 import com.kyc.payments.repositories.KycPaymentRepository;
@@ -14,6 +15,7 @@ import com.kyc.payments.ws.coretypes.PaymentData;
 import com.kyc.payments.ws.coretypes.ReceiptData;
 import com.kyc.payments.ws.paymenttypes.MakePaymentRequest;
 import com.kyc.payments.ws.paymenttypes.MakePaymentResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +27,12 @@ import org.springframework.ws.soap.server.endpoint.SoapFaultDefinition;
 import java.lang.invoke.MethodHandles;
 
 import static com.kyc.payments.constants.AppConstants.ERROR_CODE_002;
+import static com.kyc.payments.constants.AppConstants.ERROR_CODE_004;
+import static com.kyc.payments.constants.AppConstants.ERROR_CODE_006;
 
+@Slf4j
 @Service
 public class PaymentService {
-
-    public static final Logger LOGGER = LogManager.getLogger(MethodHandles.lookup().lookupClass());
 
     @Autowired
     private PaymentHelper paymentHelper;
@@ -67,11 +70,13 @@ public class PaymentService {
         KycPayment kycPayment = null;
         switch (method){
             case BRANCH:
+                log.info("Applying payment in Branch");
                 kycPayment = branchPaymentService.executeBranchPayment(paymentData);
                 result.setReceipt(generateReceiptData(kycPayment));
                 break;
             case CREDIT_CARD:
             case DEBIT_CARD:
+                log.info("Applying payment with Card {}",method);
                 kycPayment = cardPaymentService.executeCardPayment(paymentData);
                 result.setReceipt(generateReceiptData(kycPayment));
                 break;
@@ -88,10 +93,28 @@ public class PaymentService {
 
     private ReceiptData generateReceiptData(KycPayment kycPayment){
 
-        ReceiptData receiptData = new ReceiptData();
-        receiptData.setFolio(kycPayment.getFolio().intValue());
-        receiptData.setAmount(kycPayment.getAmount());
-        receiptData.setDate(DateUtil.localDateTimeToInstant(kycPayment.getDatePayment()));
-        return receiptData;
+        Integer paymentStatus = kycPayment.getIdStatus();
+        MessageData messageData = null;
+        switch (PaymentStatusEnum.getInstance(paymentStatus)){
+            case PAID:
+                log.info("Generating receipt of payment");
+                ReceiptData receiptData = new ReceiptData();
+                receiptData.setFolio(kycPayment.getFolio().intValue());
+                receiptData.setAmount(kycPayment.getAmount());
+                receiptData.setDate(DateUtil.localDateTimeToInstant(kycPayment.getDatePayment()));
+                return receiptData;
+            case REJECTED:
+                messageData = kycMessages.getMessage(ERROR_CODE_006);
+                throw KycSoapException.builderSoapException()
+                        .faultCode(SoapFaultDefinition.CLIENT)
+                        .errorData(messageData)
+                        .build();
+            default:
+                messageData = kycMessages.getMessage(ERROR_CODE_004);
+                throw KycSoapException.builderSoapException()
+                        .faultCode(SoapFaultDefinition.SERVER)
+                        .errorData(messageData)
+                        .build();
+        }
     }
 }

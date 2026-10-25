@@ -14,14 +14,14 @@
     <named-query name="KycPayment.findByFolioAndCustomer">
         <query>
             select p from KycPayment p where p.folio=:folio
-            and p.idUser=:idCustomer
+            and p.idCustomer=:idCustomer
         </query>
     </named-query>
 
     <named-query name="KycPayment.findByReferenceAndCustomer">
         <query>
             select p from KycPayment p where p.reference=:reference
-            and p.idUser=:idCustomer
+            and p.idCustomer=:idCustomer
         </query>
     </named-query>
 

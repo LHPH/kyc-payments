@@ -3,23 +3,21 @@ package com.kyc.payments.services;
 import com.kyc.core.enums.KycUserTypeEnum;
 import com.kyc.core.exception.KycSoapException;
 import com.kyc.core.model.MessageData;
-import com.kyc.core.persistence.entity.KycParameter;
-import com.kyc.core.persistence.repositories.KycParameterRepository;
 import com.kyc.core.properties.KycMessages;
 import com.kyc.core.security.SecureKycUser;
-import com.kyc.core.util.DateUtil;
 import com.kyc.payments.entity.KycCustomerBillControl;
 import com.kyc.payments.entity.KycCustomerPaymentMethod;
 import com.kyc.payments.entity.KycPayment;
+import com.kyc.payments.enums.CardPaymentProcessorResponseCodeEnum;
 import com.kyc.payments.enums.CustomerPaymentMethodEnum;
 import com.kyc.payments.enums.PaymentStatusEnum;
-import com.kyc.payments.enums.ResponsePaymentProcessorEnum;
 import com.kyc.payments.enums.TransactionStatusEnum;
 import com.kyc.payments.mappers.PaymentMapper;
 import com.kyc.payments.processor.model.PaymentProcessorData;
 import com.kyc.payments.repositories.KycCustomerPaymentMethodRepository;
+import com.kyc.payments.tcp.gateway.CreditCardGateway;
 import com.kyc.payments.ws.coretypes.PaymentData;
-import org.apache.commons.lang3.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +29,7 @@ import java.util.Optional;
 import static com.kyc.payments.constants.AppConstants.ERROR_CODE_002;
 import static com.kyc.payments.constants.AppConstants.ERROR_CODE_004;
 
+@Slf4j
 @Service
 public class CardPaymentService {
 
@@ -41,11 +40,11 @@ public class CardPaymentService {
     @Autowired
     private KycCustomerPaymentMethodRepository kycCustomerPaymentMethodRepository;
     @Autowired
-    private KycParameterRepository kycParameterRepository;
-    @Autowired
     private BillService billService;
     @Autowired
     private UserHandlingService userHandlingService;
+    @Autowired
+    private CreditCardGateway creditCardGateway;
     @Autowired
     private KycMessages kycMessages;
 
@@ -58,34 +57,34 @@ public class CardPaymentService {
 
         if(KycUserTypeEnum.CUSTOMER.equals(user.getUserType())){
 
-            Optional<KycCustomerPaymentMethod> opMethod = kycCustomerPaymentMethodRepository.findByIdCustomerAndIdPaymentMethod(id,paymentData.getMethod());
+            Long idCustomer = userHandlingService.getIdCustomer(user);
+
+            log.info("Retrieving customer payment methods from {}", idCustomer);
+            Optional<KycCustomerPaymentMethod> opMethod = kycCustomerPaymentMethodRepository.findByIdCustomerAndIdPaymentMethod(idCustomer,paymentData.getMethod());
             if(opMethod.isPresent()){
 
+                log.info("Retrieve bill data from {}",idCustomer);
                 KycCustomerBillControl billControl = billService.getCustomerBill(paymentData);
-                Long idCustomer = userHandlingService.getIdCustomer(user);
                 try {
+
                     String account = opMethod.get().getAccount();
 
+                    log.info("Creating payment data");
                     KycPayment kycPayment = paymentMapper.cardPayment(paymentData, id, account,idCustomer);
+                    log.info("Applying SEND transaction");
                     KycPayment kycPaymentResult = recordPaymentService.savePayment(kycPayment, TransactionStatusEnum.SEND);
 
-                    ResponsePaymentProcessorEnum resultProcessor = processPayment(kycPaymentResult);
-                    switch (resultProcessor) {
-                        case SUCCESS:
-                            recordPaymentService.savePayment(kycPaymentResult, TransactionStatusEnum.APPROVED);
-                            kycPaymentResult.setIdStatus(PaymentStatusEnum.PAID.getId());
-                            billService.payBill(billControl);
-                            recordPaymentService.savePayment(kycPaymentResult, TransactionStatusEnum.SUCCESS);
-                            break;
-                        case REJECT:
-                            recordPaymentService.savePayment(kycPaymentResult, TransactionStatusEnum.DECLINED);
-                            kycPaymentResult.setIdStatus(PaymentStatusEnum.REJECTED.getId());
-                            recordPaymentService.savePayment(kycPaymentResult, TransactionStatusEnum.SUCCESS);
-                        default:
-                            recordPaymentService.savePayment(kycPaymentResult, TransactionStatusEnum.FAILED);
-                    }
+                    CardPaymentProcessorResponseCodeEnum resultProcessor = processPayment(kycPaymentResult);
+                    log.info("The result of card payment is {}", resultProcessor);
+                    kycPaymentResult = switch (resultProcessor.getResult()) {
+                        case SUCCESS -> processSuccessfulPayment(kycPaymentResult, billControl);
+                        case REJECT -> processRejectedPayment(kycPaymentResult);
+                        default -> recordPaymentService.savePayment(kycPaymentResult, TransactionStatusEnum.FAILED);
+                    };
                     return kycPaymentResult;
                 } catch (Exception ex) {
+
+                    log.error("Unexpected error to process the payment ",ex);
                     MessageData messageData = kycMessages.getMessage(ERROR_CODE_004);
                     throw KycSoapException.builderSoapException()
                             .faultCode(SoapFaultDefinition.SERVER)
@@ -104,43 +103,52 @@ public class CardPaymentService {
                 .build();
     }
 
-    private ResponsePaymentProcessorEnum processPayment(KycPayment kycPayment){
-
-        KycParameter kycParameter = kycParameterRepository.getKey("KYC_PAYMENT_CARD_AUTH")
-                .orElseThrow();
+    private CardPaymentProcessorResponseCodeEnum processPayment(KycPayment kycPayment){
 
         PaymentProcessorData paymentProcessorData = PaymentProcessorData.builder()
-                .operation("001P")
-                .source("KYC")
-                .auth(kycParameter.getValue())
-                .value(layoutCard(kycPayment))
+                .folio(kycPayment.getFolio())
+                .method(CustomerPaymentMethodEnum.getInstance(kycPayment.getPaymentMethod()))
+                .account(kycPayment.getAccount())
+                .amount(kycPayment.getAmount())
+                .motive(kycPayment.getMotive())
+                .customer(kycPayment.getIdCustomer())
+                .office(kycPayment.getIdPaymentOffice())
+                .date(kycPayment.getDatePayment())
                 .build();
 
-        return ResponsePaymentProcessorEnum.SUCCESS;
+        try{
+            log.info("Calling the card payment processor");
+            MessageData result = creditCardGateway.processCardPayment(paymentProcessorData);
+            log.info("The result received by the card payment processor is {}", result);
+            return CardPaymentProcessorResponseCodeEnum.getInstance(result.getCode());
+        }
+        catch (Exception ex){
+            log.error("The card payment processor return error ",ex);
+            return CardPaymentProcessorResponseCodeEnum.UNAVAILABLE_SERVICE;
+        }
     }
 
-    //CC|12345|00000123456789|2000.00|PAY SERVICE|1|1000|20241223160819
-    private String layoutCard(KycPayment kycPayment){
+    private KycPayment processSuccessfulPayment(KycPayment kycPayment,KycCustomerBillControl billControl){
 
-        CustomerPaymentMethodEnum method = CustomerPaymentMethodEnum.getInstance(kycPayment.getPaymentMethod());
+        log.info("Applying APPROVED transaction");
+        kycPayment = recordPaymentService.savePayment(kycPayment, TransactionStatusEnum.APPROVED);
+        log.info("Change payment status to PAID");
+        kycPayment.setIdStatus(PaymentStatusEnum.PAID.getId());
+        log.info("Updating bill");
+        billService.payBill(billControl);
+        log.info("Applying SUCCESS transaction");
+        kycPayment = recordPaymentService.savePayment(kycPayment, TransactionStatusEnum.SUCCESS);
+        return kycPayment;
+    }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append(method == CustomerPaymentMethodEnum.CREDIT_CARD ? "CC": "DC");
-        sb.append("|");
-        sb.append(kycPayment.getFolio());
-        sb.append("|");
-        sb.append(StringUtils.leftPad(kycPayment.getAccount(),15,"0"));
-        sb.append("|");
-        sb.append(kycPayment.getAmount());
-        sb.append("|");
-        sb.append(kycPayment.getMotive());
-        sb.append("|");
-        sb.append(kycPayment.getIdPaymentOffice());
-        sb.append("|");
-        sb.append(kycPayment.getIdUser());
-        sb.append("|");
-        sb.append(DateUtil.dateLocalTimeToString(kycPayment.getDatePayment(),"yyyyMMddHHmmss"));
+    private KycPayment processRejectedPayment(KycPayment kycPayment){
 
-        return sb.toString();
+        log.info("Applying DECLINED transaction");
+        kycPayment = recordPaymentService.savePayment(kycPayment, TransactionStatusEnum.DECLINED);
+        log.info("Change payment status to REJECTED");
+        kycPayment.setIdStatus(PaymentStatusEnum.REJECTED.getId());
+        log.info("Applying SUCCESS transaction");
+        kycPayment = recordPaymentService.savePayment(kycPayment, TransactionStatusEnum.SUCCESS);
+        return kycPayment;
     }
 }

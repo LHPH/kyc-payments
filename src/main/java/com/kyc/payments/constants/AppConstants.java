@@ -36,5 +36,6 @@ public final class AppConstants {
     public static final String ERROR_CODE_005 = "005";
     public static final String ERROR_CODE_006 = "006";
 
+    public static final String KYC_CARD_PAYMENT_REQ_CHANNEL = "kycCardPaymentReqChannel";
     private AppConstants(){}
 }

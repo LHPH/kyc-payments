@@ -17,6 +17,11 @@ spring:
 kyc-config:
   services:
     kyc-users: http://localhost:9004
+  tcp:
+    card-payment-processor:
+      host: localhost
+      port: 9200
+      timeout: 15000
 
 service:
   url: http://localhost:9008/kyc/soap/KYCPayments
