@@ -8,23 +8,18 @@ import com.kyc.core.util.DateUtil;
 import com.kyc.payments.entity.KycPayment;
 import com.kyc.payments.enums.CustomerPaymentMethodEnum;
 import com.kyc.payments.enums.PaymentStatusEnum;
-import com.kyc.payments.helpers.PaymentHelper;
 import com.kyc.payments.repositories.KycPaymentOfficeRepository;
-import com.kyc.payments.repositories.KycPaymentRepository;
 import com.kyc.payments.ws.coretypes.PaymentData;
 import com.kyc.payments.ws.coretypes.ReceiptData;
 import com.kyc.payments.ws.paymenttypes.MakePaymentRequest;
 import com.kyc.payments.ws.paymenttypes.MakePaymentResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ws.soap.server.endpoint.SoapFaultDefinition;
 
-import java.lang.invoke.MethodHandles;
 
 import static com.kyc.payments.constants.AppConstants.ERROR_CODE_002;
 import static com.kyc.payments.constants.AppConstants.ERROR_CODE_004;
@@ -33,12 +28,6 @@ import static com.kyc.payments.constants.AppConstants.ERROR_CODE_006;
 @Slf4j
 @Service
 public class PaymentService {
-
-    @Autowired
-    private PaymentHelper paymentHelper;
-
-    @Autowired
-    private KycPaymentRepository paymentRepository;
 
     @Autowired
     private KycPaymentOfficeRepository bankRepository;

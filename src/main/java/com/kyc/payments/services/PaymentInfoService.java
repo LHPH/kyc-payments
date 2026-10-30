@@ -38,9 +38,6 @@ import static com.kyc.payments.constants.AppConstants.ERROR_CODE_005;
 public class PaymentInfoService {
 
     @Autowired
-    private PaymentHelper paymentHelper;
-
-    @Autowired
     private PaymentMapper paymentMapper;
 
     @Autowired

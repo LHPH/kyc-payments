@@ -52,3 +52,11 @@ kyc-messages:
         code: KYC-PAYMENTS-006
         message: The payment was rejected
         type: ERROR
+      "007":
+        code: KYC-PAYMENTS-007
+        message: The bill already was paid
+        type: ERROR
+      "008":
+        code: KYC-PAYMENTS-008
+        message: The bill to be paid cannot be processed
+        type: ERROR

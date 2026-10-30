@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum BillStatusEnum {
@@ -14,4 +16,11 @@ public enum BillStatusEnum {
     VALID(4);
 
     private final Integer id;
+
+    public static BillStatusEnum getInstance(int id){
+        return Arrays.stream(BillStatusEnum.values())
+                .filter(value -> value.getId() == id)
+                .findFirst()
+                .orElseThrow();
+    }
 }
