@@ -6,11 +6,13 @@ import com.kyc.core.model.MessageData;
 import com.kyc.core.properties.KycMessages;
 import com.kyc.core.security.SecureKycUser;
 import com.kyc.payments.entity.KycPayment;
+import com.kyc.payments.enums.PaymentStatusEnum;
 import com.kyc.payments.helpers.PaymentHelper;
 import com.kyc.payments.mappers.PaymentMapper;
 import com.kyc.payments.repositories.KycPaymentRepository;
 import com.kyc.payments.ws.coretypes.HistoricalPaymentCriteria;
 import com.kyc.payments.ws.coretypes.PaymentRecord;
+import com.kyc.payments.ws.coretypes.StatusPaymentEnum;
 import com.kyc.payments.ws.paymenttypes.GetHistoricalPaymentsRequest;
 import com.kyc.payments.ws.paymenttypes.GetHistoricalPaymentsResponse;
 import com.kyc.payments.ws.paymenttypes.GetPaymentRequest;
@@ -94,23 +96,19 @@ public class PaymentInfoService {
             HistoricalPaymentCriteria criteria = req.getCriteria();
             LocalDateTime dateStart = criteria.getStart().atStartOfDay();
             LocalDateTime dateFinish = criteria.getFinish().atStartOfDay();
-            Integer numRows = ObjectUtils.defaultIfNull(criteria.getLimit(),10);
+            Integer numRows = ObjectUtils.getIfNull(criteria.getLimit(),10);
+            StatusPaymentEnum statusPaymentEnum = req.getCriteria().getStatus();
             Pageable page = PageRequest.of(0, numRows);
 
             List<PaymentRecord> payments;
             switch (user.getUserType()){
                 case CUSTOMER -> {
                     Long idCustomer = userHandlingService.getIdCustomer(user);
-                    payments = paymentRepository.findPaymentsFromDateAndCustomer(dateStart,dateFinish,idCustomer,page)
-                            .stream()
-                            .map(p -> paymentMapper.toModel(p,catalogService))
-                            .toList();
+                    payments = handlingCustomerGetHistoricalPayments(idCustomer,criteria);
                 }
                 case EXECUTIVE -> {
-                    payments = paymentRepository.findPaymentsFromDateAndCustomer(dateStart,dateFinish,req.getCriteria().getCustomer(), page)
-                            .stream()
-                            .map(p -> paymentMapper.toModel(p,catalogService))
-                            .toList();
+                    Long idCustomer = criteria.getCustomer();
+                    payments = handlingCustomerGetHistoricalPayments(idCustomer,criteria);
                 }
                 default -> {
                     MessageData messageData = kycMessages.getMessage(ERROR_CODE_002);
@@ -183,4 +181,33 @@ public class PaymentInfoService {
         opPayment.ifPresent(kycPayment -> result.setPayment(paymentMapper.toModel(kycPayment, catalogService)));
         return result;
     }
+
+    private List<PaymentRecord> handlingCustomerGetHistoricalPayments(Long idCustomer,  HistoricalPaymentCriteria criteria){
+
+        LocalDateTime dateStart = criteria.getStart().atStartOfDay();
+        LocalDateTime dateFinish = criteria.getFinish().atStartOfDay();
+        Integer numRows = ObjectUtils.getIfNull(criteria.getLimit(),10);
+        StatusPaymentEnum statusPaymentEnum = criteria.getStatus();
+        Pageable page = PageRequest.of(0, numRows);
+
+        List<PaymentRecord> payments;
+        if(statusPaymentEnum!=null){
+
+            PaymentStatusEnum paymentStatusEnum = PaymentStatusEnum.getInstance(statusPaymentEnum);
+            payments = paymentRepository.findPaymentsFromDateAndCustomerAndStatus(dateStart,dateFinish,
+                            idCustomer,paymentStatusEnum.getId(),page)
+                    .stream()
+                    .map(p -> paymentMapper.toModel(p,catalogService))
+                    .toList();
+        }
+        else{
+            payments = paymentRepository.findPaymentsFromDateAndCustomer(dateStart,dateFinish,idCustomer,page)
+                    .stream()
+                    .map(p -> paymentMapper.toModel(p,catalogService))
+                    .toList();
+        }
+
+       return payments;
+    }
+
 }

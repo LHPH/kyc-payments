@@ -24,6 +24,7 @@
                 <jaxb:typesafeEnumMember value="REJECTED" name="PAYMENT_REJECTED" />
                 <jaxb:typesafeEnumMember value="PAID" name="PAYMENT_PAID" />
                 <jaxb:typesafeEnumMember value="ONGOING" name="PAYMENT_ONGOING" />
+                <jaxb:typesafeEnumMember value="FAILED" name="PAYMENT_FAILED" />
             </jaxb:typesafeEnumClass>
         </jaxb:bindings>
 

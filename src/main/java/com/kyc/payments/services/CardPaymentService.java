@@ -79,7 +79,7 @@ public class CardPaymentService {
                     kycPaymentResult = switch (resultProcessor.getResult()) {
                         case SUCCESS -> processSuccessfulPayment(kycPaymentResult, billControl);
                         case REJECT -> processRejectedPayment(kycPaymentResult);
-                        default -> recordPaymentService.savePayment(kycPaymentResult, TransactionStatusEnum.FAILED);
+                        default -> processFailurePayment(kycPaymentResult);
                     };
                     return kycPaymentResult;
                 } catch (Exception ex) {
@@ -149,6 +149,14 @@ public class CardPaymentService {
         kycPayment.setIdStatus(PaymentStatusEnum.REJECTED.getId());
         log.info("Applying SUCCESS transaction");
         kycPayment = recordPaymentService.savePayment(kycPayment, TransactionStatusEnum.SUCCESS);
+        return kycPayment;
+    }
+
+    private KycPayment processFailurePayment(KycPayment kycPayment){
+
+        log.info("Applying FAILED transaction");
+        kycPayment.setIdStatus(PaymentStatusEnum.FAILED.getId());
+        kycPayment = recordPaymentService.savePayment(kycPayment, TransactionStatusEnum.FAILED);
         return kycPayment;
     }
 }

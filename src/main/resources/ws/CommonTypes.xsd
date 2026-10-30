@@ -28,6 +28,7 @@
             <xs:element name="customer" type="xs:long" minOccurs="0"/>
             <xs:element name="start" type="xs:date" />
             <xs:element name="finish" type="xs:date" />
+            <xs:element name="status" type="cmn:StatusPaymentCategory"/>
             <xs:element name="limit" type="xs:integer"/>
         </xs:sequence>
     </xs:complexType>
@@ -51,6 +52,7 @@
             <xs:enumeration value="REJECTED" />
             <xs:enumeration value="PAID" />
             <xs:enumeration value="ONGOING" />
+            <xs:enumeration value="FAILED" />
         </xs:restriction>
     </xs:simpleType>
 

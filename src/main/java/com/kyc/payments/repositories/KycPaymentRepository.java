@@ -35,4 +35,11 @@ public interface KycPaymentRepository extends JpaRepository<KycPayment,Long> {
                                                     @Param("dateFinish") LocalDateTime dateFinish,
                                                     @Param("idCustomer") Long idCustomer,
                                                     Pageable pageable);
+
+    @Query(name = "KycPayment.findPaymentsFromDateAndCustomerAndStatus")
+    List<KycPayment> findPaymentsFromDateAndCustomerAndStatus(@Param("dateInitial") LocalDateTime dateInitial,
+                                                     @Param("dateFinish") LocalDateTime dateFinish,
+                                                     @Param("idCustomer") Long idCustomer,
+                                                     @Param("idStatus") Integer idStatus,
+                                                     Pageable pageable);
 }

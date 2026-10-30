@@ -1,5 +1,6 @@
 package com.kyc.payments.enums;
 
+import com.kyc.payments.ws.coretypes.StatusPaymentEnum;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +11,8 @@ public enum PaymentStatusEnum {
 
     REJECTED(1),
     PAID(2),
-    ONGOING(3);
+    ONGOING(3),
+    FAILED(4);
 
     private final Integer id;
 
@@ -23,5 +25,14 @@ public enum PaymentStatusEnum {
             }
         }
         throw new IllegalArgumentException("Bad value: "+id);
+    }
+
+    public static PaymentStatusEnum getInstance(StatusPaymentEnum xmlStatus){
+        return switch (xmlStatus){
+            case PAYMENT_PAID -> PAID;
+            case PAYMENT_REJECTED -> REJECTED;
+            case PAYMENT_ONGOING -> ONGOING;
+            default -> FAILED;
+        };
     }
 }

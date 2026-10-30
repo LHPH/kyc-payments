@@ -40,6 +40,14 @@
         </query>
     </named-query>
 
+    <named-query name="KycPayment.findPaymentsFromDateAndCustomerAndStatus">
+        <query>
+            select p from KycPayment p where p.datePayment&gt;= :dateInitial and p.datePayment&lt;= :dateFinish
+            and p.idCustomer=:idCustomer and p.idStatus=:idStatus
+            order by p.datePayment desc
+        </query>
+    </named-query>
+
     <named-query name="KycCustomerPaymentMethod.findAllCustomerPaymentMethod">
         <query>
             select p from KycCustomerPaymentMethod p where p.idCustomer=:idCustomer
