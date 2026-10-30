@@ -1,6 +1,7 @@
 package com.kyc.payments.configuration;
 
 import com.kyc.core.util.IntegrationUtil;
+import com.kyc.payments.configuration.properties.TcpServerData;
 import com.kyc.payments.configuration.properties.TcpServerProperties;
 import com.kyc.payments.tcp.gateway.CreditCardGateway;
 import com.kyc.payments.tcp.transformers.CardPaymentLayoutTransformer;
@@ -23,10 +24,11 @@ public class TcpClientConfig {
     @Bean
     public TcpNetClientConnectionFactory clientConnectionFactory(TcpServerProperties tcpServerProperties) {
 
-        TcpNetClientConnectionFactory factory = new TcpNetClientConnectionFactory(tcpServerProperties.getHost(),tcpServerProperties.getPort());
+        TcpServerData  tcpServerData = tcpServerProperties.getCardPaymentProcessor();
+        TcpNetClientConnectionFactory factory = new TcpNetClientConnectionFactory(tcpServerData.getHost(),tcpServerData.getPort());
         factory.setSerializer(TcpCodecs.crlf());
         factory.setDeserializer(TcpCodecs.crlf());
-        factory.setConnectTimeout(tcpServerProperties.getTimeout());
+        factory.setConnectTimeout(tcpServerData.getTimeout());
         factory.setSingleUse(false);
         return factory;
     }

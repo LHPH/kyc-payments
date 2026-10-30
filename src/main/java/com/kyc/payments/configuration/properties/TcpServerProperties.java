@@ -11,7 +11,5 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "kyc-config.tcp")
 public class TcpServerProperties {
 
-    private String host;
-    private int port;
-    private int timeout;
+    private TcpServerData cardPaymentProcessor;
 }
