@@ -22,6 +22,7 @@ public interface PaymentMapper {
             @Mapping(target = "paymentMethod",expression = "java(com.kyc.payments.enums.CustomerPaymentMethodEnum.BRANCH.getId())"),
             @Mapping(target = "amount",source = "source.amount"),
             @Mapping(target = "motive",constant = "PAYMENT"),
+            @Mapping(target = "account",constant = ""),
             @Mapping(target = "idStatus",expression = "java(com.kyc.payments.enums.PaymentStatusEnum.PAID.getId())"),
             @Mapping(target = "idBill",source = "source.bill"),
             @Mapping(target = "idPaymentOffice",source = "source.office"),
@@ -68,6 +69,9 @@ public interface PaymentMapper {
             }
             case REJECTED -> {
                 return StatusPaymentEnum.PAYMENT_REJECTED;
+            }
+            case FAILED -> {
+                return StatusPaymentEnum.PAYMENT_FAILED;
             }
         }
         return null;
