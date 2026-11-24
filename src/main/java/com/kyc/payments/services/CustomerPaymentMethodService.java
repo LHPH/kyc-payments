@@ -46,8 +46,9 @@ public class CustomerPaymentMethodService {
            SecureKycUser user = (SecureKycUser) auth.getDetails();
 
            Long id = user.getId();
+           Long idCustomer = userHandlingService.getIdCustomer(user);
 
-           Optional<KycCustomerPaymentMethod> opMethod = repository.findByIdCustomerAndIdPaymentMethod(id,req.getPaymentMethod().getMethod());
+           Optional<KycCustomerPaymentMethod> opMethod = repository.findByIdCustomerAndIdPaymentMethod(idCustomer,req.getPaymentMethod().getMethod());
 
            KycCustomerPaymentMethod method;
            if(opMethod.isPresent()){
@@ -56,7 +57,6 @@ public class CustomerPaymentMethodService {
                mapper.toUpdateEntity(method,req.getPaymentMethod());
            }
            else{
-               Long idCustomer = userHandlingService.getIdCustomer(user);
                method = mapper.toEntity(req.getPaymentMethod(),idCustomer);
            }
 

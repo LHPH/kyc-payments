@@ -6,12 +6,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnTransformer;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name="KYC_CUSTOMER_PAYMENT_METHOD")
@@ -30,6 +29,7 @@ public class KycCustomerPaymentMethod {
     private Integer idPaymentMethod;
 
     @Column(name = "ACCOUNT")
+    @ColumnTransformer(read = "SP_KYC_DECRYPT(account)", write = "SP_KYC_ENCRYPT(?)")
     private String account;
 
     @Column(name = "AUTHORIZE")
@@ -41,7 +41,6 @@ public class KycCustomerPaymentMethod {
     @Column(name = "ACTIVE")
     private Boolean active;
 
-    @Temporal(value = TemporalType.TIMESTAMP)
     @Column(name = "CREATION_DATE")
-    private Date creationDate;
+    private LocalDate creationDate;
 }

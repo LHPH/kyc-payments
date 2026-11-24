@@ -19,7 +19,7 @@ public interface CustomerPaymentMethodMapper {
             @Mapping(target = "directDebit",source = "source.directDebit"),
             @Mapping(target = "authorize",source = "source.authorize"),
             @Mapping(target = "active",source = "source.active"),
-            @Mapping(target = "creationDate",expression = "java(new java.util.Date())"),
+            @Mapping(target = "creationDate",expression = "java(java.time.LocalDate.now())"),
             @Mapping(target = "idCustomer",source = "id"),
     })
     KycCustomerPaymentMethod toEntity(CustomerPaymentMethod source,Long id);
